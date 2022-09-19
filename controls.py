@@ -2,22 +2,33 @@
 controls.py
 Created: Saturday, 17th September 2022 11:20:53 am
 Matthew Riche
-Last Modified: Saturday, 17th September 2022 11:20:57 am
+Last Modified: Sunday, 18th September 2022 2:55:30 pm
 Modified By: Matthew Riche
 '''
 
 import maya.cmds as cmds
 
 class CurveData:
-    def __init__(self):
+    def __init__(self, node=None, sel=False):
         """Data that represents the shape of a nurbsCurve, and methods to capture and rebuild it 
         where needed.
         """        
 
-        self.pos_vectors
-        self.degree
-        self.knots
-        self.form
+        self.pos_vectors = []
+        self.degree = None
+        self.knots = None
+        self.form = None
+        self.curve_node = None
+        self.curve_shape = None
+        if(node is not None):
+            if(cmds.objectType(node) == 'nurbsCurve'):
+                curve_shape_node = self.get_curve_shape(node)[0]
+                self.learn_curve(curve_shape_node)
+            else:
+                raise Exception ("String {} isn't a nurbsCurve.")
+        elif(sel):
+            curve_shape_node = self.get_curve_shape()[0]
+            self.learn_curve(curve_shape_node)
 
     @staticmethod
     def get_curve_shape(nodename=None):
@@ -42,11 +53,9 @@ class CurveData:
                 nodename = cmds.ls(sl=True)[0]
             except IndexError:
                 raise Exception ("No objects in selection.")
-        
         # Sanitize this data-- we want the selection to be a transform, and the shape to be a nurbscurve
         if(cmds.objectType(nodename) != 'transform'):
             raise Exception ("nodename doesn't point to a transform node.")
-        
         shapenodes = cmds.listRelatives(nodename, shapes=True)
         if(shapenodes):
             for shape in shapenodes:
@@ -75,31 +84,30 @@ class CurveData:
             raise Exception ("Must be single string representing shape node.")
         elif(cmds.objectType(curve_shape_node) != 'nurbsCurve'):
             raise Exception ("Type in scene of {} is not 'nurbsCurve'.".format(curve_shape_node))
-
         # Read and store the point data from a curve:
         cv_indices = cmds.getAttr(curve_shape_node + '.controlPoints', mi=True)
+        print(curve_shape_node)
         pos_vectors = []
         for i in cv_indices:
-            next_vec = cmds.getAttr(curve_shape_node + '.cv[' + str(i) + ']')[0]
+            # By casting this to a list, we give ourselves the ability to assign items later, which
+            # helps with our mirroring.
+            next_vec = list(cmds.getAttr(curve_shape_node + '.cv[' + str(i) + ']')[0])
             pos_vectors.append(next_vec)
-
         # Create the curve info node and connect it to the shape to read data.
         curve_info_node = cmds.createNode('curveInfo', n='RIGID_TEMP_curveInfo')
         cmds.connectAttr(curve_shape_node + '.worldSpace', curve_info_node + '.inputCurve')
-
         # Store other necessary attribute data.
-        knots = cmds.getAttr(curve_info_node + '.knots')
+        knots = cmds.getAttr(curve_info_node + '.knots')[0]
         degree = cmds.getAttr(curve_shape_node + '.degree')
         form = cmds.getAttr(curve_shape_node + '.form')
-
         # Prep dict to return:
         self.pos_vectors = pos_vectors
         self.knots = knots
         self.degree = degree
         self.form = form
-
         # Scene cleanup of temporary utility nodes.
         cmds.delete(curve_info_node)
+        print("Read nurbsCurve attributes for {}".format(curve_shape_node))
 
     def build(self):
         """Build the curve in the scene based on the captured data.
@@ -112,18 +120,110 @@ class CurveData:
         for data in [self.form, self.pos_vectors, self.knots, self.degree]:
             if(data is None):
                 raise Exception ("Cannot build curve with lacking curve data")
-
         # Create the curve node based on it.
+        print(self)
         self.curve_node = cmds.curve(
-            per = self.form,
+            per = False,
             p = self.pos_vectors,
             k = self.knots,
             d = self.degree
         )
+        self.curve_shape = self.get_curve_shape(self.curve_node)
+        if(self.form > 0):
+            cmds.closeCurve(self.curve_shape, ch=False, rpo=True)
 
-# TODO build a function to install a new curve's shape beneath given transform.
+    def mirror(self, axis='x'):
+        """Mirror the control vertices' position along a given axis.
 
-# TODO build a function to mirror the components of a curve shape node.
+        Args:
+            axis (str, optional): Value characters are 'x', 'y', 'z' depend on the axis to reverse.
+                Defaults to 'x'.
+
+        Raises:
+            Exception: If a bad char is supplied to axis.
+        """        
+
+        axis_names = ('x', 'y', 'z')
+        if(axis not in axis_names):
+            raise Exception ("Axis must be 'x', 'y', or 'z'.")
+        # Turn the given axis from 'x','y','z' to [0, 1, 2] for use in the next part.
+        ind = axis.index(axis)
+        # Negate the value of the position vector (based on axis)
+        for i in range(len(self.pos_vectors)):
+            self.pos_vectors[i][ind] = (-self.pos_vectors[i][ind])
+
+    def replace(self, node=None):
+        """Builds this curve and makes it the child selected or specified controller.  Deletes the 
+        former shape node.
+
+        Args:
+            node (str, optional): The string name of the transform node to target.  If none, will 
+                read the scene selection. Defaults to None.
+
+        Raises:
+            Exception: If the targeted node (by arg or by selection) is not a transform.
+        """        
+
+        if(node is None):
+            node = cmds.ls(sl=True)[0]
+            if(cmds.objectType(node) != 'transform'):
+                raise Exception ("Targeted node must be a transform.")
+
+        old_shape = self.get_curve_shape(node)
+        self.build()
+        cmds.parent(self.curve_shape, node, s=True, r=True)
+        cmds.delete(self.curve_node)
+        cmds.delete(old_shape)
+
+    @staticmethod
+    def copy(mirror=False):
+
+        selections = cmds.ls(sl=True)
+        if(len(selections) != 2):
+            raise Exception ("Must select two transforms with nurbCurve shapes beneath.")
+
+        data = CurveData()
+        shape_to_copy = data.get_curve_shape(selections[0])[0]
+        data.learn_curve(shape_to_copy)
+        print(data)
+        if(mirror):
+            data.mirror()
+        data.replace(node=selections[1])
+
+    def as_dict(self):
+        return ({
+                'pos_vectors':self.pos_vectors, 
+                'degree':self.degree, 
+                'knots':self.knots, 
+                'form':self.form
+                })
+
+    def from_dict(self, dict):
+        """Given a dictionary, populate the data.
+
+        Args:
+            dict (dict): Dictionary that must contain pos_vectors, degre, knots, and form.
+
+        Raises:
+            Exception: If the provided dict doesn't contain all of the necessary entries.
+        """        
+
+        for attr_name in ['pos_vectors', 'degree', 'knots', 'form']:
+            if(attr_name not in dict):
+                raise Exception ("Provided dictionary doesn't have the right contents.")
+        
+        self.pos_vectors = dict['pos_vectors']
+        self.degree = dict['degree']
+        self.knots = dict['knots']
+        self.form = dict['form']
+
+
+    def __str__(self):
+        return ("Cvs: {}\nDegree: {}\nKnots: {}\nPeriodic: {}".format(
+            self.pos_vectors, self.degree, self.knots, self.form))
+
+    def __len__(self):
+        return len(self.pos_vectors)
 
 # TODO change override colour of shape node, based on side token prefix.
 
