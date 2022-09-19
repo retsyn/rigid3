@@ -20,15 +20,38 @@ class CurveData:
         self.form = None
         self.curve_node = None
         self.curve_shape = None
+        # Formerly, we'd capture curves during init automatically.  Now it must be flagged, so the 
+        # UI can own a curve instance and reset it at will.
+        if((node is not None) or (sel == True)):
+            self.capture_curve(node=node, sel=sel)
+
+
+    def capture_curve(self, node=None, sel=False):
+        """Captures and reads the data of a curve.
+
+        Args:
+            node (str, optional): The in-scene name of a nurbsCurve. Defaults to None.
+            sel (bool, optional): Whether or not to use selection. Defaults to False.
+
+        Raises:
+            Exception: _description_
+        """        
         if(node is not None):
             if(cmds.objectType(node) == 'nurbsCurve'):
-                curve_shape_node = self.get_curve_shape(node)[0]
-                self.learn_curve(curve_shape_node)
+                self.curve_shape = self.get_curve_shape(node)[0]
+                self.learn_curve(self.curve_shape)
             else:
-                raise Exception ("String {} isn't a nurbsCurve.")
+                raise TypeError ("String {} isn't a nurbsCurve.")
         elif(sel):
-            curve_shape_node = self.get_curve_shape()[0]
-            self.learn_curve(curve_shape_node)
+            print("Learning curve from selection...")
+            node = self.get_curve_shape()[0]
+            if(cmds.objectType(node) != 'nurbsCurve'):
+                raise TypeError ("{} is not a nurbsCurve.".format(node))
+            self.curve_shape = node
+            self.learn_curve(self.curve_shape)
+        else:
+            raise Exception ("Requires either node string or selection to be true.")
+
 
     @staticmethod
     def get_curve_shape(nodename=None):
@@ -60,7 +83,7 @@ class CurveData:
         if(shapenodes):
             for shape in shapenodes:
                 if(cmds.objectType(shape) != 'nurbsCurve'):
-                    raise Exception ("Shape node called {} is not of type nurbsCurve".format(shape))
+                    raise TypeError ("Shape node called {} is not of type nurbsCurve".format(shape))
             return shapenodes
         else:
             raise Exception ("Given transform didn't have a shape child.")
@@ -83,7 +106,7 @@ class CurveData:
         if(type(curve_shape_node) is not str):
             raise Exception ("Must be single string representing shape node.")
         elif(cmds.objectType(curve_shape_node) != 'nurbsCurve'):
-            raise Exception ("Type in scene of {} is not 'nurbsCurve'.".format(curve_shape_node))
+            raise TypeError ("Type in scene of {} is not 'nurbsCurve'.".format(curve_shape_node))
         # Read and store the point data from a curve:
         cv_indices = cmds.getAttr(curve_shape_node + '.controlPoints', mi=True)
         print(curve_shape_node)
@@ -177,11 +200,18 @@ class CurveData:
 
     @staticmethod
     def copy(mirror=False):
+        """Copies from first selection to second selection and installs the curves beneath.
+
+        Args:
+            mirror (bool, optional): optionally mirrors x if true.. Defaults to False.
+
+        Raises:
+            Exception: If two valid targets aren't selected.
+        """        
 
         selections = cmds.ls(sl=True)
         if(len(selections) != 2):
             raise Exception ("Must select two transforms with nurbCurve shapes beneath.")
-
         data = CurveData()
         shape_to_copy = data.get_curve_shape(selections[0])[0]
         data.learn_curve(shape_to_copy)
