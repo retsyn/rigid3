@@ -15,7 +15,7 @@ from shiboken2 import wrapInstance
 from . import globals
 from . import file_ops as fo
 from . import controls as ctl
-
+from . import build as bld
 
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
@@ -66,6 +66,7 @@ class Rigid_ui(qtw.QDialog):
         self.vis_replace_button = self.findChild(qtw.QPushButton, "replace_sel_button")
         self.vis_load_curvedata = self.findChild(qtw.QPushButton, "load_data_button")
         self.vis_save_curvedata = self.findChild(qtw.QPushButton, "save_data_button")
+        self.bld_fastfk_button = self.findChild(qtw.QPushButton, "fast_fk_button")
         self.curvedata_label = self.findChild(qtw.QLabel, "cur_data_label")
 
         return
@@ -84,6 +85,7 @@ class Rigid_ui(qtw.QDialog):
         self.vis_replace_button.clicked.connect(self._vis_replace_sel)
         self.vis_load_curvedata.clicked.connect(self._vis_load_data)
         self.vis_save_curvedata.clicked.connect(self._vis_save_data)
+        self.bld_fastfk_button.clicked.connect(self._bld_fast_fk)
 
 
     def _vis_copy_data(self):
@@ -141,6 +143,13 @@ class Rigid_ui(qtw.QDialog):
 
         save_path = self._browse(title='Save Curve Data as JSON', save=True)
         fo.dump_to_file(data_dict, save_path)
+
+    def _bld_fast_fk(self):
+        """Invoke the SimpleFK build.
+        """        
+
+        #TODO The UI should hold onto the idiom data for records.
+        bld.SimpleFK()
 
     def _browse(self, title='Open Maya File', save=True, dir=''):
         """Wraps the opening of a file browser window.
