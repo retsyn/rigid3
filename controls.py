@@ -221,6 +221,14 @@ class CurveData:
         data.replace(node=selections[1])
 
     def as_dict(self):
+
+        for data_point in [self.degree, self.knots, self.form]:
+            if(data_point is None):
+                raise TypeError ("CurveData contained NoneType data.")
+
+        if(self.pos_vectors == []):
+            raise ValueError ("No point data in CurveData.")
+        
         return ({
                 'pos_vectors':self.pos_vectors, 
                 'degree':self.degree, 
@@ -237,6 +245,24 @@ class CurveData:
         Raises:
             Exception: If the provided dict doesn't contain all of the necessary entries.
         """        
+
+        # Fix data from the legacy file-type:
+        if('points' in dict):
+            print("Legacy dat 'points' found.")
+            dict['pos_vectors'] = dict['points']
+        if('per' in dict):
+            print("legacy data 'per' found.")
+            if(dict['per'] == False or dict['per'] == 'false'):
+                dict['form'] = 0
+            elif(dict['per'] == True or dict['per'] == 'true'):
+                dict['form'] = 2
+
+        # Check that data isn't empty
+        for data_key in ['degree', 'knots', 'form']:
+            if(dict[data_key] is None):
+                raise TypeError ("Dictionary contained NoneType data.")
+        if(dict['pos_vectors'] == []):
+            raise ValueError ("'pos_vectors' was an empty list.")
 
         for attr_name in ['pos_vectors', 'degree', 'knots', 'form']:
             if(attr_name not in dict):

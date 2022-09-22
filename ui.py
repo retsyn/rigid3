@@ -13,6 +13,7 @@ from PySide2 import QtCore, QtWidgets as qtw, QtGui, QtUiTools
 from shiboken2 import wrapInstance
 
 from . import globals
+from . import file_ops as fo
 from . import controls as ctl
 
 
@@ -35,8 +36,6 @@ class Rigid_ui(qtw.QDialog):
 
         # This UI will own a piece of controller data of it's own, for controller shape edits.
         self.ui_ctl_data = ctl.CurveData()
-
-
         self.show()
 
         return
@@ -63,10 +62,13 @@ class Rigid_ui(qtw.QDialog):
         self.ui = loader.load(ui_file, parentWidget=self)
 
         self.vis_copydata_button = self.findChild(qtw.QPushButton, "copy_data_button")
+        self.vis_buildorigin_button = self.findChild(qtw.QPushButton, "build_button")
+        self.vis_replace_button = self.findChild(qtw.QPushButton, "replace_sel_button")
+        self.vis_load_curvedata = self.findChild(qtw.QPushButton, "load_data_button")
+        self.vis_save_curvedata = self.findChild(qtw.QPushButton, "save_data_button")
         self.curvedata_label = self.findChild(qtw.QLabel, "cur_data_label")
 
         return
-
 
     def _populate_and_edit_widgets(self):
         '''
@@ -78,9 +80,15 @@ class Rigid_ui(qtw.QDialog):
     def _create_connections(self):
 
         self.vis_copydata_button.clicked.connect(self._vis_copy_data)
+        self.vis_buildorigin_button.clicked.connect(self._vis_build_origin)
+        self.vis_replace_button.clicked.connect(self._vis_replace_sel)
+        self.vis_load_curvedata.clicked.connect(self._vis_load_data)
+        self.vis_save_curvedata.clicked.connect(self._vis_save_data)
 
 
     def _vis_copy_data(self):
+        """Trigged by copy data from the UI-- copies selected curve into workable data.
+        """        
         
         if(len(cmds.ls(sl=True)) == 0):
             cmds.inViewMessage(amg='<hl>Must select a nurbsCurve.</hl>', pos='midCenter', fade=True)
@@ -93,4 +101,64 @@ class Rigid_ui(qtw.QDialog):
         
         self.curvedata_label.setText("copied\n{}".format(self.ui_ctl_data.curve_shape))
 
-  
+    def _vis_build_origin(self):
+        """UI wrapper for the curveData.build() method.
+        """        
+        self.ui_ctl_data.build()
+
+    def _vis_replace_sel(self):
+        """UI wrapper for the curveData.replace() method.
+        """        
+        self.ui_ctl_data.replace()
+
+    def _vis_load_data(self):
+        """Opens a filedialog browser, and reads the JSON data selected into the curveData.
+        """        
+        load_path = self._browse(title='Load JSON Curve Data', save=False)
+        data_dict = fo.read_from_file(load_path)
+        print("Loaded data contents:\n{}".format(data_dict))
+        try:
+            self.ui_ctl_data.from_dict(data_dict)
+        except TypeError:
+            print("Loaded empty data!")
+        except ValueError:
+            print("Loaded empty data!")
+
+    def _vis_save_data(self):
+        """Opens a filedialog browser, and saves the captured curve data as JSON.
+        """        
+
+        try:
+            data_dict = self.ui_ctl_data.as_dict()
+        except (ValueError, TypeError):
+            if(len(cmds.ls(sl=True)) == 1):
+                self.ui_ctl_data.capture_curve(sel=True)
+                data_dict = self.ui_ctl_data.as_dict()
+            else:
+                cmds.inViewMessage(amg="<hl>Capture curve data or select a viable curve.</hl>", 
+                    pos='midCenter', fade=True)
+                return
+
+        save_path = self._browse(title='Save Curve Data as JSON', save=True)
+        fo.dump_to_file(data_dict, save_path)
+
+    def _browse(self, title='Open Maya File', save=True, dir=''):
+        """Wraps the opening of a file browser window.
+        
+        Args:
+            title (str, optional): Dialog title text. Defaults to 'Open Maya File'.
+            save (bool, optional): Bool; True=Save mode, False=Load. Defaults to True.
+            dir (str, optional): Default directory. Defaults to ''.
+
+        Returns:
+            str: Path to specified file.
+        """        
+
+        if(save):
+            fname = qtw.QFileDialog.getSaveFileName(
+                self, title, dir, "Curve Data (*.json)")[0]
+        else:
+            fname = qtw.QFileDialog.getOpenFileName(
+                self, title, dir, "Curve Data (*.json)")[0]
+        if(fname):
+            return fname
