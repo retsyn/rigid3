@@ -34,6 +34,12 @@ class Rigid_ui(qtw.QDialog):
         self._populate_and_edit_widgets()
         self._create_connections()
 
+        # init the load path.
+        mod_path = os.path.abspath(__file__)
+        parent_path = os.path.dirname(mod_path)
+        self.ctrls_path = ("{}/control_shapes/".format(parent_path))
+
+
         # This UI will own a piece of controller data of it's own, for controller shape edits.
         self.ui_ctl_data = ctl.CurveData()
         self.show()
@@ -66,7 +72,12 @@ class Rigid_ui(qtw.QDialog):
         self.vis_replace_button = self.findChild(qtw.QPushButton, "replace_sel_button")
         self.vis_load_curvedata = self.findChild(qtw.QPushButton, "load_data_button")
         self.vis_save_curvedata = self.findChild(qtw.QPushButton, "save_data_button")
+        self.vis_mirrorx_button = self.findChild(qtw.QPushButton, "mirror_x_button")
+        self.vis_mirrory_button = self.findChild(qtw.QPushButton, "mirror_y_button")
+        self.vis_mirrorz_button = self.findChild(qtw.QPushButton, "mirror_z_button")
         self.bld_fastfk_button = self.findChild(qtw.QPushButton, "fast_fk_button")
+
+
         self.curvedata_label = self.findChild(qtw.QLabel, "cur_data_label")
 
         return
@@ -86,6 +97,10 @@ class Rigid_ui(qtw.QDialog):
         self.vis_load_curvedata.clicked.connect(self._vis_load_data)
         self.vis_save_curvedata.clicked.connect(self._vis_save_data)
         self.bld_fastfk_button.clicked.connect(self._bld_fast_fk)
+
+        self.vis_mirrorx_button.clicked.connect(lambda: self._vis_mirror_ctrl(axis='x'))
+        self.vis_mirrory_button.clicked.connect(lambda: self._vis_mirror_ctrl(axis='y'))
+        self.vis_mirrorz_button.clicked.connect(lambda: self._vis_mirror_ctrl(axis='z'))
 
 
     def _vis_copy_data(self):
@@ -116,7 +131,7 @@ class Rigid_ui(qtw.QDialog):
     def _vis_load_data(self):
         """Opens a filedialog browser, and reads the JSON data selected into the curveData.
         """        
-        load_path = self._browse(title='Load JSON Curve Data', save=False)
+        load_path = self._browse(title='Load JSON Curve Data', save=False, dir=self.ctrls_path)
         data_dict = fo.read_from_file(load_path)
         print("Loaded data contents:\n{}".format(data_dict))
         try:
@@ -141,8 +156,19 @@ class Rigid_ui(qtw.QDialog):
                     pos='midCenter', fade=True)
                 return
 
-        save_path = self._browse(title='Save Curve Data as JSON', save=True)
+        save_path = self._browse(title='Save Curve Data as JSON', save=True, dir=self.ctrls_path)
         fo.dump_to_file(data_dict, save_path)
+
+    def _vis_mirror_ctrl(self, axis):
+        """Invoke the mirror function of self.ui_ctrl_data from a button.
+        Args:
+            axis (str ['x', 'y', 'z']): Which axis to mirror on.
+        """        
+        self.ui_ctl_data.mirror(axis=axis)
+        old_text = self.curvedata_label.text()
+        new_text = old_text + ("\nMirrored on {}".format(axis))
+        self.curvedata_label.setText(new_text)
+
 
     def _bld_fast_fk(self):
         """Invoke the SimpleFK build.

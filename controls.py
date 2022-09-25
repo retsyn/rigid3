@@ -7,6 +7,13 @@ Modified By: Matthew Riche
 '''
 
 import maya.cmds as cmds
+import os
+
+# init the path.
+mod_path = os.path.abspath(__file__)
+parent_path = os.path.dirname(mod_path)
+ctrls_path = ("{}/control_shapes/".format(parent_path))
+
 
 class CurveData:
     def __init__(self, node=None, sel=False):
@@ -165,12 +172,13 @@ class CurveData:
         Raises:
             Exception: If a bad char is supplied to axis.
         """        
-
+        print("AXIS IS {}".format(axis))
         axis_names = ('x', 'y', 'z')
         if(axis not in axis_names):
             raise Exception ("Axis must be 'x', 'y', or 'z'.")
         # Turn the given axis from 'x','y','z' to [0, 1, 2] for use in the next part.
-        ind = axis.index(axis)
+        ind = axis_names.index(axis)
+        print("INDEX IS {}".format(ind))
         # Negate the value of the position vector (based on axis)
         for i in range(len(self.pos_vectors)):
             self.pos_vectors[i][ind] = (-self.pos_vectors[i][ind])
