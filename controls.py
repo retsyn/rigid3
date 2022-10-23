@@ -9,11 +9,6 @@ Modified By: Matthew Riche
 import maya.cmds as cmds
 import os
 
-# init the path.
-mod_path = os.path.abspath(__file__)
-parent_path = os.path.dirname(mod_path)
-ctrls_path = ("{}/control_shapes/".format(parent_path))
-
 
 class CurveData:
     def __init__(self, node=None, sel=False):

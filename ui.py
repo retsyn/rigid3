@@ -69,6 +69,7 @@ class Rigid_ui(qtw.QDialog):
 
         self.vis_copydata_button = self.findChild(qtw.QPushButton, "copy_data_button")
         self.vis_buildorigin_button = self.findChild(qtw.QPushButton, "build_button")
+        self.vis_make_at_match_button = self.findChild(qtw.QPushButton, "build_match_button")
         self.vis_replace_button = self.findChild(qtw.QPushButton, "replace_sel_button")
         self.vis_load_curvedata = self.findChild(qtw.QPushButton, "load_data_button")
         self.vis_save_curvedata = self.findChild(qtw.QPushButton, "save_data_button")
@@ -76,6 +77,43 @@ class Rigid_ui(qtw.QDialog):
         self.vis_mirrory_button = self.findChild(qtw.QPushButton, "mirror_y_button")
         self.vis_mirrorz_button = self.findChild(qtw.QPushButton, "mirror_z_button")
         self.bld_fastfk_button = self.findChild(qtw.QPushButton, "fast_fk_button")
+
+        # First row of colour buttons:
+        self.colour_button_00 = self.findChild(qtw.QPushButton, "darkGrayButton")
+        self.colour_button_01 = self.findChild(qtw.QPushButton, "blackButton")
+        self.colour_button_02 = self.findChild(qtw.QPushButton, "coalGrayButton")
+        self.colour_button_03 = self.findChild(qtw.QPushButton, "lightGrayButton")
+        self.colour_button_04 = self.findChild(qtw.QPushButton, "darkRedButton")
+        self.colour_button_05 = self.findChild(qtw.QPushButton, "navyBlueButton")
+        self.colour_button_06 = self.findChild(qtw.QPushButton, "electricBlueButton")
+        self.colour_button_07 = self.findChild(qtw.QPushButton, "forestGreenButton")
+        self.colour_button_08 = self.findChild(qtw.QPushButton, "darkPurpleButton")
+        self.colour_button_09 = self.findChild(qtw.QPushButton, "lightPurpleButton")
+        self.colour_button_10 = self.findChild(qtw.QPushButton, "darkBrownButton")
+        self.colour_button_11 = self.findChild(qtw.QPushButton, "earthBrownButton")
+        self.colour_button_12 = self.findChild(qtw.QPushButton, "rustRedButton")
+        self.colour_button_13 = self.findChild(qtw.QPushButton, "brightRedButton")
+        self.colour_button_14 = self.findChild(qtw.QPushButton, "brightGreenButton")
+        self.colour_button_15 = self.findChild(qtw.QPushButton, "palerBlueButton")
+        
+        self.colour_button_16 = self.findChild(qtw.QPushButton, "whiteButton")
+        self.colour_button_17 = self.findChild(qtw.QPushButton, "yellowButton")
+        self.colour_button_18 = self.findChild(qtw.QPushButton, "cyanButton")
+        self.colour_button_19 = self.findChild(qtw.QPushButton, "lightGrayButton")
+        self.colour_button_20 = self.findChild(qtw.QPushButton, "seafoamButton")
+        self.colour_button_21 = self.findChild(qtw.QPushButton, "salmonButton")
+        self.colour_button_22 = self.findChild(qtw.QPushButton, "orangeButton")
+        self.colour_button_23 = self.findChild(qtw.QPushButton, "bananaButton")
+        self.colour_button_24 = self.findChild(qtw.QPushButton, "chartrueseButton")
+        self.colour_button_25 = self.findChild(qtw.QPushButton, "darkOrangeButton")
+        self.colour_button_26 = self.findChild(qtw.QPushButton, "fadedGreenButton")
+        self.colour_button_27 = self.findChild(qtw.QPushButton, "paleGreenButton")
+        self.colour_button_28 = self.findChild(qtw.QPushButton, "rustRedButton")
+        self.colour_button_29 = self.findChild(qtw.QPushButton, "brightRedButton")
+        self.colour_button_30 = self.findChild(qtw.QPushButton, "brightGreenButton")
+        self.colour_button_31 = self.findChild(qtw.QPushButton, "palerBlueButton")
+
+
 
 
         self.curvedata_label = self.findChild(qtw.QLabel, "cur_data_label")
@@ -93,6 +131,7 @@ class Rigid_ui(qtw.QDialog):
 
         self.vis_copydata_button.clicked.connect(self._vis_copy_data)
         self.vis_buildorigin_button.clicked.connect(self._vis_build_origin)
+        self.vis_make_at_match_button.clicked.connect(self._vis_build_match)
         self.vis_replace_button.clicked.connect(self._vis_replace_sel)
         self.vis_load_curvedata.clicked.connect(self._vis_load_data)
         self.vis_save_curvedata.clicked.connect(self._vis_save_data)
@@ -122,6 +161,23 @@ class Rigid_ui(qtw.QDialog):
         """UI wrapper for the curveData.build() method.
         """        
         self.ui_ctl_data.build()
+
+    def _vis_build_match(self):
+
+        sel = cmds.ls(sl=True)
+        if(sel):
+            if(cmds.objectType(sel[0]) not in ['transform', 'joint']):
+                cmds.inViewMessage(amg="<hl>Can't match to a non-transform!</hl>", pos='midCenter',
+                    fade=True)
+                return
+            self.ui_ctl_data.build()
+            new_null = cmds.group(self.ui_ctl_data.curve_node)
+            token = sel[0].rpartition('_')[0]
+            cmds.matchTransform(new_null, sel[0])
+            cmds.rename(new_null, '{}_null'.format(token))
+            cmds.rename(self.ui_ctl_data.curve_node, '{}_ctrl'.format(token))
+        else:
+            cmds.inViewMessage(amg="<hl>Must make a selection</hl>")
 
     def _vis_replace_sel(self):
         """UI wrapper for the curveData.replace() method.
