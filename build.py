@@ -2,11 +2,13 @@
 build.py
 Created: Thursday, 22nd September 2022 9:37:53 am
 Matthew Riche
-Last Modified: Thursday, 22nd September 2022 9:38:16 am
+Last Modified: Tuesday, 22nd November 2022 2:35:07 pm
 Modified By: Matthew Riche
 '''
 
+
 import maya.cmds as cmds
+from . import nodework as nw
 
 class BuildIdiom:
     def __init__(self):
@@ -67,12 +69,59 @@ class BuildIdiom:
             print("Storing created nodes:\n{}".format(self.created_nodes))
 
 
+class RibbonJoints(BuildIdiom):
+    def __init__(self):
+        """Creates joints beneath long lists of transforms like follicles, to assist in building 
+        ribbons.
+
+        Raises:
+            ValueError: If the selection has varied types of node, indicating likely a mistake.
+        """        
+        super().__init__()
+        
+        self.selected_nodes = cmds.ls(sl=True)
+        # Get the type of the first node:
+        match_type = cmds.objectType(self.selected_nodes[0])
+        # Sanitize selection:
+        for node in self.selected_nodes:
+            if(cmds.objectType(node) != match_type):
+                raise ValueError ("Selection has varied types of node.")
+
+        self.build()
+
+    def build(self):
+        super().build()
+
+        # These are the nodes I will permit building beneath:
+        accepted_nodes = ['follicle', 'locator', 'transform']
+
+        created_joints = []
+        affected_nodes = []
+        for follicle_node in self.selected_nodes:            
+            # Double check that the selected node is something legitimate:
+            if(cmds.objectType(nw.get_shape(follicle_node)) in accepted_nodes):
+                # Selection must be cleared in order to not confuse joint creation.
+                cmds.select(cl=True)
+                # Create a new joint at origin:
+                new_joint = cmds.joint(p=(0,0,0))
+                created_joints.append(new_joint)
+                # Move the joint to the exact transformation as the follicle_node and parent it.
+                cmds.matchTransform(new_joint, follicle_node)
+                cmds.parent(new_joint, follicle_node)
+                affected_nodes.append(follicle_node)
+            else:
+                continue
+        
+        # New joints are added to created list, and anything that has a new child is affected.
+        self.post_build(created=created_joints, affected=affected_nodes)
+
 class SimpleFK(BuildIdiom):
-
-
     def __init__(self, trans=False):
-        """Simplistic FK build, wherein a null group matches transform to a selected joint, and 
-        beneath the transform is a controller, which connects it's rotate to the joint.
+        """Build a simple FK, rotation only unless otherwise specified, using a null trans and 
+        Direct connection to FK.
+
+        Args:
+            trans (bool, optional): Whether or not to hook up the transform. Defaults to False.
         """        
         super().__init__()
         self.build(trans)
