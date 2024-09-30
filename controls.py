@@ -283,6 +283,20 @@ class CurveData:
 
     def __len__(self):
         return len(self.pos_vectors)
+    
+
+def colour_shapenode(rgb: tuple, target: str):
+    # verify the rgb value is sane:
+    if(len(rgb) != 3):
+        raise IndexError("rgb was provided wrong number of values.")
+    for vector in rgb:
+        if(type(vector) not in ['float', 'int', 'double']):
+            raise ValueError("Value given in rgb \"{vector}\" is not a number.")
+
+    # Todo: add rgb    
+    
+        
+    
 
 # TODO change override colour of shape node, based on side token prefix.
 

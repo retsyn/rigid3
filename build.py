@@ -149,3 +149,29 @@ class SimpleFK(BuildIdiom):
         self.post_build(created = [nurbs_name, new_group], affected=selected_joint)
 
 
+class SimpleIK(BuildIdiom):
+    def __init__(self, joints=[]):
+        super().__init__()
+
+        self.selected_nodes = [jnt for jnt in cmds.ls(sl=True) if cmds.nodeType(jnt) == 'joint']
+        jnt_count = len(self.selected_nodes)
+
+        # Would kill for 3.10's match case.
+        if(jnt_count == 3):
+            self.build(self.selected_nodes, 3)
+        elif(jnt_count == 2):
+            self.build(self.selected_nodes, 2)
+        else:
+            raise ValueError("Select either 2 or 3 joints.")
+
+    def build(self, joints, type):
+        super().build()
+        
+        if(type == 3):
+            self.build_ik_leg(joints)
+        elif(type == 2):
+            self.build_ik_lever(joints)
+        else:
+            raise ValueError("Unhandled IK build type.")
+
+        
