@@ -2,11 +2,30 @@
 /*-----QWidget-----*/
 QWidget
 {
-	background-color: #3b4140;
-	color: #000000;
+	background-color: #313F3C;
+	color: #ffffff;
 
 }
 
+/* Style for the QTabWidget as a whole */
+QTabWidget {
+    background: transparent;
+    border: 2px solid #ccc;
+}
+
+/* Style for the tab bar (where the tabs are located) */
+QTabBar::tab {
+    background: #9879CD;
+	color: #ffffff;
+    font-weight: bold;
+    margin: 2px;
+	padding: 3px;
+	border-radius:5px;
+}
+
+QTabWidget::pane {
+    background: transparent  /* Change this to your desired color */
+}
 
 /*-----QLabel-----*/
 QLabel
@@ -17,9 +36,53 @@ QLabel
 
 }
 
+QSlider {
+    min-height: 20px;  /* Minimum height to make it visually more distinct */
+}
+
+QSlider::groove:horizontal {
+    border: 1px solid #999;
+    height: 8px;  /* Height of the groove */
+    background: #b0b0b0;  /* Color of the groove */
+    border-radius: 4px;  /* Rounded corners */
+}
+
+QSlider::handle:horizontal {
+    background: #E5E18C;  /* Color of the handle */
+    border: none;  /* Border color for the handle */
+    width: 8px;  /* Width of the handle */
+    height: 20px;  /* Height of the handle */
+    margin: -6px 0;  /* Centers the handle over the groove */
+    border-radius: 3px;  /* Makes the handle circular */
+}
+
+QSlider::sub-page:horizontal {
+    background: #69a09c;  /* Color of the part before the handle */
+    border: 1px solid #5c8a72;
+    height: 8px;
+    border-radius: 4px;
+}
+
+QSlider::add-page:horizontal {
+    background: #c0c0c0;  /* Color of the part after the handle */
+    border: 1px solid #999;
+    height: 8px;
+    border-radius: 4px;
+}
+
+QSlider::tickmarks:horizontal {
+    background: #444;
+    height: 2px;
+}
+
+QSlider::tickmark:horizontal {
+    width: 2px;
+    background: #333;
+}
+
 
 QPushButton {
-    background-color: #416758;
+    background-color: #347464;
     color: #ffffff;
     font-weight: bold;
     border: none;  /* Define border explicitly */
@@ -41,8 +104,44 @@ QPushButton::pressed
 
 }
 
+QSpinBox {
+    background-color: #101010;  /* Background color of the spin box */
+    border: none;  /* Border for the spin box */
+    border-radius: 3px;  /* Optional: rounded corners */
+    padding: 2px;  /* Padding inside the spin box */
+    color: #dee;  /* Text color */
+    font-size: 12px;  /* Font size of the text */
+}
+
+QSpinBox::up-button {
+	color: #dee;
+	background-color: #F08969;
+	border-radius: 3px;
+}
+
+QSpinBox::down-button {
+	color: #dee;
+	background-color: #915441;
+	border-radius: 3px;
+
+}
+
+QSpinBox::up-arrow {
+    width: 9px;  /* Specify a width */
+    height: 9px;  /* Specify a height */
+    color: #dee;  /* Color for the arrow */
+}
+
+QSpinBox::down-arrow {
+    width: 9px;  /* Specify a width */
+    height: 9px;  /* Specify a height */
+    color: #dee;  /* Color for the arrow */
+}
+
+
+
 QFrame {
-    border: 2px solid #34a0c1b7;  /* Set the width, style, and color of the border */
+    border: none;  /* Set the width, style, and color of the border */
     border-radius: 3px;  /* Optional: Add rounded corners if needed */
     background-color: transparent;  /* Ensure the inside color is not affected */
 }
