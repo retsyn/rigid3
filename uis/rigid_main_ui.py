@@ -17,10 +17,10 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(470, 405)
+        Form.resize(470, 444)
         self.tabWidget = QTabWidget(Form)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(20, 30, 381, 361))
+        self.tabWidget.setGeometry(QRect(20, 30, 381, 401))
         self.visuals_tab = QWidget()
         self.visuals_tab.setObjectName(u"visuals_tab")
         self.verticalLayoutWidget = QWidget(self.visuals_tab)
@@ -107,7 +107,7 @@ class Ui_Form(object):
         self.label_3.setGeometry(QRect(230, 130, 81, 20))
         self.verticalLayoutWidget_2 = QWidget(self.visuals_tab)
         self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(10, 220, 355, 116))
+        self.verticalLayoutWidget_2.setGeometry(QRect(10, 220, 355, 145))
         self.colourLayout = QVBoxLayout(self.verticalLayoutWidget_2)
         self.colourLayout.setSpacing(3)
         self.colourLayout.setObjectName(u"colourLayout")
@@ -116,25 +116,30 @@ class Ui_Form(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.recolour_button = QPushButton(self.verticalLayoutWidget_2)
-        self.recolour_button.setObjectName(u"recolour_button")
+        self.thicken25_button = QPushButton(self.verticalLayoutWidget_2)
+        self.thicken25_button.setObjectName(u"thicken25_button")
 
-        self.verticalLayout_2.addWidget(self.recolour_button)
+        self.verticalLayout_2.addWidget(self.thicken25_button)
 
-        self.thicken_button = QPushButton(self.verticalLayoutWidget_2)
-        self.thicken_button.setObjectName(u"thicken_button")
+        self.thicken40_button = QPushButton(self.verticalLayoutWidget_2)
+        self.thicken40_button.setObjectName(u"thicken40_button")
 
-        self.verticalLayout_2.addWidget(self.thicken_button)
+        self.verticalLayout_2.addWidget(self.thicken40_button)
 
         self.unthicken_button = QPushButton(self.verticalLayoutWidget_2)
         self.unthicken_button.setObjectName(u"unthicken_button")
 
         self.verticalLayout_2.addWidget(self.unthicken_button)
 
-        self.pushButton_11 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_11.setObjectName(u"pushButton_11")
+        self.copycolour_button = QPushButton(self.verticalLayoutWidget_2)
+        self.copycolour_button.setObjectName(u"copycolour_button")
 
-        self.verticalLayout_2.addWidget(self.pushButton_11)
+        self.verticalLayout_2.addWidget(self.copycolour_button)
+
+        self.pastecolour_button = QPushButton(self.verticalLayoutWidget_2)
+        self.pastecolour_button.setObjectName(u"pastecolour_button")
+
+        self.verticalLayout_2.addWidget(self.pastecolour_button)
 
 
         self.horizontalLayout_2.addLayout(self.verticalLayout_2)
@@ -145,59 +150,59 @@ class Ui_Form(object):
 
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.pushButton_8 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_8.setObjectName(u"pushButton_8")
-        self.pushButton_8.setStyleSheet(u"background-color: #fffeee000;")
+        self.yellow_pushbutton = QPushButton(self.verticalLayoutWidget_2)
+        self.yellow_pushbutton.setObjectName(u"yellow_pushbutton")
+        self.yellow_pushbutton.setStyleSheet(u"background-color: #fffeee000;")
 
-        self.gridLayout_2.addWidget(self.pushButton_8, 1, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.yellow_pushbutton, 1, 2, 1, 1)
 
-        self.pushButton_7 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_7.setObjectName(u"pushButton_7")
-        self.pushButton_7.setStyleSheet(u"background-color: #EEEFFF999")
+        self.paleyellow_pushbutton = QPushButton(self.verticalLayoutWidget_2)
+        self.paleyellow_pushbutton.setObjectName(u"paleyellow_pushbutton")
+        self.paleyellow_pushbutton.setStyleSheet(u"background-color: #EEEFFF999")
 
-        self.gridLayout_2.addWidget(self.pushButton_7, 2, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.paleyellow_pushbutton, 2, 2, 1, 1)
 
-        self.pushButton_3 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setStyleSheet(u"background-color: #FF5733;")
+        self.red_pushButton = QPushButton(self.verticalLayoutWidget_2)
+        self.red_pushButton.setObjectName(u"red_pushButton")
+        self.red_pushButton.setStyleSheet(u"background-color: #FF5733;")
 
-        self.gridLayout_2.addWidget(self.pushButton_3, 1, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.red_pushButton, 1, 1, 1, 1)
 
-        self.pushButton_4 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_4.setObjectName(u"pushButton_4")
-        self.pushButton_4.setStyleSheet(u"background-color: #FFF999999")
+        self.palered_pushbutton = QPushButton(self.verticalLayoutWidget_2)
+        self.palered_pushbutton.setObjectName(u"palered_pushbutton")
+        self.palered_pushbutton.setStyleSheet(u"background-color: #FFF999999")
 
-        self.gridLayout_2.addWidget(self.pushButton_4, 2, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.palered_pushbutton, 2, 1, 1, 1)
 
-        self.pushButton_5 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_5.setObjectName(u"pushButton_5")
-        self.pushButton_5.setStyleSheet(u"background-color: #FFF000FFF;")
+        self.purple_pushbutton = QPushButton(self.verticalLayoutWidget_2)
+        self.purple_pushbutton.setObjectName(u"purple_pushbutton")
+        self.purple_pushbutton.setStyleSheet(u"background-color: #FFF000FFF;")
 
-        self.gridLayout_2.addWidget(self.pushButton_5, 3, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.purple_pushbutton, 3, 1, 1, 1)
 
-        self.pushButton_6 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_6.setObjectName(u"pushButton_6")
-        self.pushButton_6.setStyleSheet(u"background-color: #01ff16")
+        self.green_pushbutton = QPushButton(self.verticalLayoutWidget_2)
+        self.green_pushbutton.setObjectName(u"green_pushbutton")
+        self.green_pushbutton.setStyleSheet(u"background-color: #01ff16")
 
-        self.gridLayout_2.addWidget(self.pushButton_6, 3, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.green_pushbutton, 3, 2, 1, 1)
 
-        self.pushButton_9 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_9.setObjectName(u"pushButton_9")
-        self.pushButton_9.setStyleSheet(u"background-color: #555555FFF;")
+        self.blue_pushbutton = QPushButton(self.verticalLayoutWidget_2)
+        self.blue_pushbutton.setObjectName(u"blue_pushbutton")
+        self.blue_pushbutton.setStyleSheet(u"background-color: #555555FFF;")
 
-        self.gridLayout_2.addWidget(self.pushButton_9, 1, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.blue_pushbutton, 1, 3, 1, 1)
 
-        self.pushButton_10 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_10.setObjectName(u"pushButton_10")
-        self.pushButton_10.setStyleSheet(u"background-color: #999999FFF")
+        self.paleblue_pushbutton = QPushButton(self.verticalLayoutWidget_2)
+        self.paleblue_pushbutton.setObjectName(u"paleblue_pushbutton")
+        self.paleblue_pushbutton.setStyleSheet(u"background-color: #999999FFF")
 
-        self.gridLayout_2.addWidget(self.pushButton_10, 2, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.paleblue_pushbutton, 2, 3, 1, 1)
 
-        self.pushButton_12 = QPushButton(self.verticalLayoutWidget_2)
-        self.pushButton_12.setObjectName(u"pushButton_12")
-        self.pushButton_12.setStyleSheet(u"background-color: #464646;")
+        self.black_pushbutton = QPushButton(self.verticalLayoutWidget_2)
+        self.black_pushbutton.setObjectName(u"black_pushbutton")
+        self.black_pushbutton.setStyleSheet(u"background-color: #464646;")
 
-        self.gridLayout_2.addWidget(self.pushButton_12, 3, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.black_pushbutton, 3, 3, 1, 1)
 
 
         self.horizontalLayout_2.addLayout(self.gridLayout_2)
@@ -284,19 +289,20 @@ class Ui_Form(object):
         self.label_2.setText(QCoreApplication.translate("Form", u"Current Data:", None))
         self.cur_data_label.setText(QCoreApplication.translate("Form", u"Unknown", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"Control Scale:", None))
-        self.recolour_button.setText(QCoreApplication.translate("Form", u"Recolour Selected", None))
-        self.thicken_button.setText(QCoreApplication.translate("Form", u"Thickness to 5.0", None))
-        self.unthicken_button.setText(QCoreApplication.translate("Form", u"Thickness to default", None))
-        self.pushButton_11.setText(QCoreApplication.translate("Form", u"Copy Colour", None))
-        self.pushButton_8.setText("")
-        self.pushButton_7.setText("")
-        self.pushButton_3.setText("")
-        self.pushButton_4.setText("")
-        self.pushButton_5.setText("")
-        self.pushButton_6.setText("")
-        self.pushButton_9.setText("")
-        self.pushButton_10.setText("")
-        self.pushButton_12.setText("")
+        self.thicken25_button.setText(QCoreApplication.translate("Form", u"Thickness 2.5", None))
+        self.thicken40_button.setText(QCoreApplication.translate("Form", u"Thickness 4.0", None))
+        self.unthicken_button.setText(QCoreApplication.translate("Form", u"Default Thickness", None))
+        self.copycolour_button.setText(QCoreApplication.translate("Form", u"Copy Colour", None))
+        self.pastecolour_button.setText(QCoreApplication.translate("Form", u"Paste Colour", None))
+        self.yellow_pushbutton.setText("")
+        self.paleyellow_pushbutton.setText("")
+        self.red_pushButton.setText("")
+        self.palered_pushbutton.setText("")
+        self.purple_pushbutton.setText("")
+        self.green_pushbutton.setText("")
+        self.blue_pushbutton.setText("")
+        self.paleblue_pushbutton.setText("")
+        self.black_pushbutton.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.visuals_tab), QCoreApplication.translate("Form", u"Controllers", None))
         self.fast_fk_button.setText(QCoreApplication.translate("Form", u"Fast FK", None))
         self.fast_fk_button_2.setText(QCoreApplication.translate("Form", u"Fast IK", None))

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>470</width>
-    <height>405</height>
+    <height>444</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>20</x>
      <y>30</y>
      <width>381</width>
-     <height>361</height>
+     <height>401</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -199,7 +199,7 @@
        <x>10</x>
        <y>220</y>
        <width>355</width>
-       <height>116</height>
+       <height>145</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="colourLayout">
@@ -211,30 +211,37 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QPushButton" name="recolour_button">
+           <widget class="QPushButton" name="thicken25_button">
             <property name="text">
-             <string>Recolour Selected</string>
+             <string>Thickness 2.5</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="thicken_button">
+           <widget class="QPushButton" name="thicken40_button">
             <property name="text">
-             <string>Thickness to 5.0</string>
+             <string>Thickness 4.0</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="unthicken_button">
             <property name="text">
-             <string>Thickness to default</string>
+             <string>Default Thickness</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_11">
+           <widget class="QPushButton" name="copycolour_button">
             <property name="text">
              <string>Copy Colour</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pastecolour_button">
+            <property name="text">
+             <string>Paste Colour</string>
             </property>
            </widget>
           </item>
@@ -256,7 +263,7 @@
         <item>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="1" column="2">
-           <widget class="QPushButton" name="pushButton_8">
+           <widget class="QPushButton" name="yellow_pushbutton">
             <property name="styleSheet">
              <string notr="true">background-color: #fffeee000;</string>
             </property>
@@ -266,7 +273,7 @@
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QPushButton" name="pushButton_7">
+           <widget class="QPushButton" name="paleyellow_pushbutton">
             <property name="styleSheet">
              <string notr="true">background-color: #EEEFFF999</string>
             </property>
@@ -276,7 +283,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="red_pushButton">
             <property name="styleSheet">
              <string notr="true">background-color: #FF5733;</string>
             </property>
@@ -286,7 +293,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QPushButton" name="pushButton_4">
+           <widget class="QPushButton" name="palered_pushbutton">
             <property name="styleSheet">
              <string notr="true">background-color: #FFF999999</string>
             </property>
@@ -296,7 +303,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QPushButton" name="pushButton_5">
+           <widget class="QPushButton" name="purple_pushbutton">
             <property name="styleSheet">
              <string notr="true">background-color: #FFF000FFF;</string>
             </property>
@@ -306,7 +313,7 @@
            </widget>
           </item>
           <item row="3" column="2">
-           <widget class="QPushButton" name="pushButton_6">
+           <widget class="QPushButton" name="green_pushbutton">
             <property name="styleSheet">
              <string notr="true">background-color: #01ff16</string>
             </property>
@@ -316,7 +323,7 @@
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QPushButton" name="pushButton_9">
+           <widget class="QPushButton" name="blue_pushbutton">
             <property name="styleSheet">
              <string notr="true">background-color: #555555FFF;</string>
             </property>
@@ -326,7 +333,7 @@
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QPushButton" name="pushButton_10">
+           <widget class="QPushButton" name="paleblue_pushbutton">
             <property name="styleSheet">
              <string notr="true">background-color: #999999FFF</string>
             </property>
@@ -336,7 +343,7 @@
            </widget>
           </item>
           <item row="3" column="3">
-           <widget class="QPushButton" name="pushButton_12">
+           <widget class="QPushButton" name="black_pushbutton">
             <property name="styleSheet">
              <string notr="true">background-color: #464646;</string>
             </property>

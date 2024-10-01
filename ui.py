@@ -87,6 +87,22 @@ class Rigid_ui(qtw.QDialog):
         self.bld_fastfk_button = self.findChild(qtw.QPushButton, "fast_fk_button")
         self.bld_ribbon_joints_button = self.findChild(qtw.QPushButton, "ribbon_joints_button")
 
+        self.setblue_button = self.findChild(qtw.QPushButton, "blue_pushbutton")
+        self.setgreen_button = self.findChild(qtw.QPushButton, "green_pushbutton")
+        self.setpaleblue_button = self.findChild(qtw.QPushButton, "paleblue_pushbutton")
+        self.setpalered_button = self.findChild(qtw.QPushButton, "palered_pushbutton")
+        self.setblack_button = self.findChild(qtw.QPushButton, "black_pushbutton")
+        self.setpurple_button = self.findChild(qtw.QPushButton, "purple_pushbutton")
+        self.setred_button = self.findChild(qtw.QPushButton, "red_pushbutton")
+        self.setyellow_button = self.findChild(qtw.QPushButton, "yellow_pushbutton")
+
+        self.copycolour_button = self.findChild(qtw.QPushButton, "copycolour_button")
+        self.pastecolour_button = self.findChild(qtw.QPushButton, "pastecolour_button")
+        self.thicken25_button = self.findChild(qtw.QPushButton, "thicken25_button")
+        self.thicken40_button = self.findChild(qtw.QPushButton, "thicken40_button")
+        self.unthicken_button = self.findChild(qtw.QPushButton, "unthicken_button")
+
+
         self.curvedata_label = self.findChild(qtw.QLabel, "cur_data_label")
 
         return
@@ -112,6 +128,63 @@ class Rigid_ui(qtw.QDialog):
         self.vis_mirrorx_button.clicked.connect(lambda: self._vis_mirror_ctrl(axis='x'))
         self.vis_mirrory_button.clicked.connect(lambda: self._vis_mirror_ctrl(axis='y'))
         self.vis_mirrorz_button.clicked.connect(lambda: self._vis_mirror_ctrl(axis='z'))
+
+        self.thicken25_button.clicked.connect(lambda: self._thicken25())
+        self.thicken40_button.clicked.connect(lambda: self._thicken40())
+        self.unthicken_button.clicked.connect(lambda: self._unthicken())
+
+        self.copycolour_button.clicked.connect(lambda: self._copy_colour())
+
+    def _copy_colour(self):
+
+        selection = cmds.ls(sl=True)[0]
+
+        shape = nw.get_shape(selection)[0]
+
+        colourrgb = cmds.getAttr(f"{shape}.overrideColorRGB")[0]
+
+        r, g, b = [int(value * 255) for value in colourrgb]
+        new_colour = QtGui.QColor(r, g, b)
+        self.pastecolour_button.setStyleSheet(f"background-color: rgb({new_colour.red()}, {new_colour.green()}, {new_colour.blue()});")
+        
+
+
+    def _unthicken(self):
+
+        selection = cmds.ls(sl=True)
+        for node in selection:
+            try:
+                shape = nw.get_shape(node)[0]
+            except TypeError:
+                shape = node
+            
+            cmds.setAttr(shape + ".lineWidth", -1.0)
+            print(f"Set {shape} to thickness -1.0")
+
+    def _thicken25(self):
+
+        selection = cmds.ls(sl=True)
+        for node in selection:
+            try:
+                shape = nw.get_shape(node)[0]
+            except TypeError:
+                shape = node
+            
+            cmds.setAttr(shape + ".lineWidth", 2.5)
+            print(f"Set {shape} to thickness 2.5")
+
+
+    def _thicken40(self):
+
+        selection = cmds.ls(sl=True)
+        for node in selection:
+            try:
+                shape = nw.get_shape(node)[0]
+            except TypeError:
+                shape = node
+            
+            cmds.setAttr(shape + ".lineWidth", 4.0)
+            print(f"Set {shape} to thickness 4.0")
 
 
 
