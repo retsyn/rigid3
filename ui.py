@@ -46,6 +46,9 @@ class Rigid_ui(qtw.QDialog):
         self.ui_ctl_data = ctl.CurveData()
         self.show()
 
+        # Copied colour state:
+        self.copied_colour = (0.2, 0.2, 0.2)
+
         return
 
     def _refresh(self):
@@ -95,6 +98,7 @@ class Rigid_ui(qtw.QDialog):
         self.setpurple_button = self.findChild(qtw.QPushButton, "purple_pushbutton")
         self.setred_button = self.findChild(qtw.QPushButton, "red_pushbutton")
         self.setyellow_button = self.findChild(qtw.QPushButton, "yellow_pushbutton")
+        self.setpaleyellow_button = self.findChild(qtw.QPushButton, "paleyellow_pushbutton")
 
         self.copycolour_button = self.findChild(qtw.QPushButton, "copycolour_button")
         self.pastecolour_button = self.findChild(qtw.QPushButton, "pastecolour_button")
@@ -133,6 +137,19 @@ class Rigid_ui(qtw.QDialog):
         self.thicken40_button.clicked.connect(lambda: self._thicken40())
         self.unthicken_button.clicked.connect(lambda: self._unthicken())
 
+        self.setblue_button.clicked.connect(lambda:self._set_rgb(globals.rgb_blue))
+        self.setgreen_button.clicked.connect(lambda:self._set_rgb(globals.rgb_green))
+        self.setpaleblue_button.clicked.connect(lambda:self._set_rgb(globals.rgb_paleblue))
+        self.setpalered_button.clicked.connect(lambda:self._set_rgb(globals.rgb_palered))
+        self.setblack_button.clicked.connect(lambda:self._set_rgb(globals.rgb_black))
+        self.setpurple_button.clicked.connect(lambda:self._set_rgb(globals.rgb_purple))
+        self.setred_button.clicked.connect(lambda:self._set_rgb(globals.rgb_red))
+        self.setpaleyellow_button.clicked.connect(lambda:self._set_rgb(globals.rgb_paleyellow))
+        self.setyellow_button.clicked.connect(lambda:self._set_rgb(globals.rgb_yellow))
+
+        self.pastecolour_button.clicked.connect(lambda:self._set_rgb(self.copied_colour))
+
+
         self.copycolour_button.clicked.connect(lambda: self._copy_colour())
 
     def _copy_colour(self):
@@ -142,7 +159,7 @@ class Rigid_ui(qtw.QDialog):
         shape = nw.get_shape(selection)[0]
 
         colourrgb = cmds.getAttr(f"{shape}.overrideColorRGB")[0]
-
+        self.copied_colour = colourrgb
         r, g, b = [int(value * 255) for value in colourrgb]
         new_colour = QtGui.QColor(r, g, b)
         self.pastecolour_button.setStyleSheet(f"background-color: rgb({new_colour.red()}, {new_colour.green()}, {new_colour.blue()});")
@@ -187,6 +204,20 @@ class Rigid_ui(qtw.QDialog):
             print(f"Set {shape} to thickness 4.0")
 
 
+    def _set_rgb(self, rgb_value):
+        print(f"Recoloured to {rgb_value}")
+        selections = cmds.ls(sl=True)
+        for node in selections:
+            try:
+                shape = nw.get_shape(node)[0]
+            except TypeError:
+                shape = node
+            cmds.setAttr(f"{shape}.overrideEnabled", 1)
+            cmds.setAttr(f"{shape}.overrideRGBColors", 1)
+            
+            cmds.setAttr(f"{shape}.overrideColorR", rgb_value[0])
+            cmds.setAttr(f"{shape}.overrideColorG", rgb_value[1])
+            cmds.setAttr(f"{shape}.overrideColorB", rgb_value[2])
 
     def _recolor(self, index):
         

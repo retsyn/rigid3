@@ -80,6 +80,23 @@ QSlider::tickmark:horizontal {
     background: #333;
 }
 
+QDial {
+    background: #F08969;  /* Background color of the QDial */
+    border: none;  /* Outer border around the dial */
+    border-radius: 50%;  /* Makes it perfectly round */
+    min-width: 40px;  /* Set minimum width to make the dial more visible */
+    min-height: 40px;
+}
+
+QDial::handle {
+    background: #ffffff;  /* Handle color */
+    border: none #5c8a72;  /* Border color for the handle */
+    width: 4px;  /* Width of the handle */
+    height: 4px;  /* Height of the handle */
+    margin: -3px;  /* Centers the handle properly on the dial */
+    border-radius: 7px;  /* Make the handle round */
+}
+
 
 QPushButton {
     background-color: #347464;

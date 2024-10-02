@@ -26,53 +26,56 @@ class Ui_Form(object):
         self.verticalLayoutWidget = QWidget(self.visuals_tab)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
         self.verticalLayoutWidget.setGeometry(QRect(10, 10, 211, 201))
-        self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_3 = QGridLayout(self.verticalLayoutWidget)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
         self.load_data_button = QPushButton(self.verticalLayoutWidget)
         self.load_data_button.setObjectName(u"load_data_button")
 
-        self.verticalLayout.addWidget(self.load_data_button)
+        self.gridLayout_3.addWidget(self.load_data_button, 0, 0, 1, 1)
 
         self.save_data_button = QPushButton(self.verticalLayoutWidget)
         self.save_data_button.setObjectName(u"save_data_button")
 
-        self.verticalLayout.addWidget(self.save_data_button)
+        self.gridLayout_3.addWidget(self.save_data_button, 1, 0, 1, 1)
 
         self.copy_data_button = QPushButton(self.verticalLayoutWidget)
         self.copy_data_button.setObjectName(u"copy_data_button")
 
-        self.verticalLayout.addWidget(self.copy_data_button)
+        self.gridLayout_3.addWidget(self.copy_data_button, 2, 0, 1, 1)
 
         self.replace_sel_button = QPushButton(self.verticalLayoutWidget)
         self.replace_sel_button.setObjectName(u"replace_sel_button")
 
-        self.verticalLayout.addWidget(self.replace_sel_button)
+        self.gridLayout_3.addWidget(self.replace_sel_button, 3, 0, 1, 1)
 
         self.build_button = QPushButton(self.verticalLayoutWidget)
         self.build_button.setObjectName(u"build_button")
 
-        self.verticalLayout.addWidget(self.build_button)
+        self.gridLayout_3.addWidget(self.build_button, 4, 0, 1, 1)
 
         self.build_match_button = QPushButton(self.verticalLayoutWidget)
         self.build_match_button.setObjectName(u"build_match_button")
 
-        self.verticalLayout.addWidget(self.build_match_button)
+        self.gridLayout_3.addWidget(self.build_match_button, 5, 0, 1, 1)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.mirror_x_button = QPushButton(self.verticalLayoutWidget)
         self.mirror_x_button.setObjectName(u"mirror_x_button")
+        self.mirror_x_button.setStyleSheet(u"background-color: #CCC444444;")
 
         self.horizontalLayout.addWidget(self.mirror_x_button)
 
         self.mirror_y_button = QPushButton(self.verticalLayoutWidget)
         self.mirror_y_button.setObjectName(u"mirror_y_button")
+        self.mirror_y_button.setStyleSheet(u"background-color: #888888222;")
 
         self.horizontalLayout.addWidget(self.mirror_y_button)
 
         self.mirror_z_button = QPushButton(self.verticalLayoutWidget)
         self.mirror_z_button.setObjectName(u"mirror_z_button")
+        self.mirror_z_button.setStyleSheet(u"background-color: #333333CCC;")
 
         self.horizontalLayout.addWidget(self.mirror_z_button)
 
@@ -82,7 +85,7 @@ class Ui_Form(object):
         self.horizontalLayout.addWidget(self.pushButton)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.gridLayout_3.addLayout(self.horizontalLayout, 6, 0, 1, 1)
 
         self.frame = QFrame(self.visuals_tab)
         self.frame.setObjectName(u"frame")
@@ -95,13 +98,6 @@ class Ui_Form(object):
         self.cur_data_label = QLabel(self.frame)
         self.cur_data_label.setObjectName(u"cur_data_label")
         self.cur_data_label.setGeometry(QRect(10, 20, 101, 41))
-        self.horizontalSlider = QSlider(self.visuals_tab)
-        self.horizontalSlider.setObjectName(u"horizontalSlider")
-        self.horizontalSlider.setGeometry(QRect(230, 150, 81, 21))
-        self.horizontalSlider.setOrientation(Qt.Horizontal)
-        self.build_scale = QSpinBox(self.visuals_tab)
-        self.build_scale.setObjectName(u"build_scale")
-        self.build_scale.setGeometry(QRect(320, 150, 41, 21))
         self.label_3 = QLabel(self.visuals_tab)
         self.label_3.setObjectName(u"label_3")
         self.label_3.setGeometry(QRect(230, 130, 81, 20))
@@ -152,31 +148,31 @@ class Ui_Form(object):
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.yellow_pushbutton = QPushButton(self.verticalLayoutWidget_2)
         self.yellow_pushbutton.setObjectName(u"yellow_pushbutton")
-        self.yellow_pushbutton.setStyleSheet(u"background-color: #fffeee000;")
+        self.yellow_pushbutton.setStyleSheet(u"background-color: #ffee00;")
 
         self.gridLayout_2.addWidget(self.yellow_pushbutton, 1, 2, 1, 1)
 
         self.paleyellow_pushbutton = QPushButton(self.verticalLayoutWidget_2)
         self.paleyellow_pushbutton.setObjectName(u"paleyellow_pushbutton")
-        self.paleyellow_pushbutton.setStyleSheet(u"background-color: #EEEFFF999")
+        self.paleyellow_pushbutton.setStyleSheet(u"background-color: #EEFF99")
 
         self.gridLayout_2.addWidget(self.paleyellow_pushbutton, 2, 2, 1, 1)
 
-        self.red_pushButton = QPushButton(self.verticalLayoutWidget_2)
-        self.red_pushButton.setObjectName(u"red_pushButton")
-        self.red_pushButton.setStyleSheet(u"background-color: #FF5733;")
+        self.red_pushbutton = QPushButton(self.verticalLayoutWidget_2)
+        self.red_pushbutton.setObjectName(u"red_pushbutton")
+        self.red_pushbutton.setStyleSheet(u"background-color: #FF5733;")
 
-        self.gridLayout_2.addWidget(self.red_pushButton, 1, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.red_pushbutton, 1, 1, 1, 1)
 
         self.palered_pushbutton = QPushButton(self.verticalLayoutWidget_2)
         self.palered_pushbutton.setObjectName(u"palered_pushbutton")
-        self.palered_pushbutton.setStyleSheet(u"background-color: #FFF999999")
+        self.palered_pushbutton.setStyleSheet(u"background-color: #FF9999")
 
         self.gridLayout_2.addWidget(self.palered_pushbutton, 2, 1, 1, 1)
 
         self.purple_pushbutton = QPushButton(self.verticalLayoutWidget_2)
         self.purple_pushbutton.setObjectName(u"purple_pushbutton")
-        self.purple_pushbutton.setStyleSheet(u"background-color: #FFF000FFF;")
+        self.purple_pushbutton.setStyleSheet(u"background-color: #FF00FF;")
 
         self.gridLayout_2.addWidget(self.purple_pushbutton, 3, 1, 1, 1)
 
@@ -188,13 +184,13 @@ class Ui_Form(object):
 
         self.blue_pushbutton = QPushButton(self.verticalLayoutWidget_2)
         self.blue_pushbutton.setObjectName(u"blue_pushbutton")
-        self.blue_pushbutton.setStyleSheet(u"background-color: #555555FFF;")
+        self.blue_pushbutton.setStyleSheet(u"background-color: #5555FF;")
 
         self.gridLayout_2.addWidget(self.blue_pushbutton, 1, 3, 1, 1)
 
         self.paleblue_pushbutton = QPushButton(self.verticalLayoutWidget_2)
         self.paleblue_pushbutton.setObjectName(u"paleblue_pushbutton")
-        self.paleblue_pushbutton.setStyleSheet(u"background-color: #999999FFF")
+        self.paleblue_pushbutton.setStyleSheet(u"background-color: #9999FF")
 
         self.gridLayout_2.addWidget(self.paleblue_pushbutton, 2, 3, 1, 1)
 
@@ -210,6 +206,17 @@ class Ui_Form(object):
 
         self.colourLayout.addLayout(self.horizontalLayout_2)
 
+        self.resize_dial = QDial(self.visuals_tab)
+        self.resize_dial.setObjectName(u"resize_dial")
+        self.resize_dial.setGeometry(QRect(220, 150, 61, 51))
+        self.pushButton_2 = QPushButton(self.visuals_tab)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.pushButton_2.setGeometry(QRect(280, 150, 21, 21))
+        self.pushButton_2.setStyleSheet(u"background-color: #F08969; color: black; font-size: 14px;")
+        self.pushButton_3 = QPushButton(self.visuals_tab)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+        self.pushButton_3.setGeometry(QRect(280, 180, 21, 21))
+        self.pushButton_3.setStyleSheet(u"background-color: #F08969; color: black; font-size: 14x;")
         self.tabWidget.addTab(self.visuals_tab, "")
         self.build_tab = QWidget()
         self.build_tab.setObjectName(u"build_tab")
@@ -296,13 +303,15 @@ class Ui_Form(object):
         self.pastecolour_button.setText(QCoreApplication.translate("Form", u"Paste Colour", None))
         self.yellow_pushbutton.setText("")
         self.paleyellow_pushbutton.setText("")
-        self.red_pushButton.setText("")
+        self.red_pushbutton.setText("")
         self.palered_pushbutton.setText("")
         self.purple_pushbutton.setText("")
         self.green_pushbutton.setText("")
         self.blue_pushbutton.setText("")
         self.paleblue_pushbutton.setText("")
         self.black_pushbutton.setText("")
+        self.pushButton_2.setText(QCoreApplication.translate("Form", u"+", None))
+        self.pushButton_3.setText(QCoreApplication.translate("Form", u"-", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.visuals_tab), QCoreApplication.translate("Form", u"Controllers", None))
         self.fast_fk_button.setText(QCoreApplication.translate("Form", u"Fast FK", None))
         self.fast_fk_button_2.setText(QCoreApplication.translate("Form", u"Fast IK", None))
