@@ -18,6 +18,7 @@ from . import file_ops as fo
 from . import controls as ctl
 from . import build as bld
 from . import nodework as nw
+from . import naming as nm
 
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
@@ -31,6 +32,9 @@ class Rigid_ui(qtw.QDialog):
         self.setWindowTitle("Rigid v{}".format(globals.RIGID_VERSION))
 
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
+        # Set window flags to make the widget behave like a normal window
+        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
         self._init_ui()
         self._populate_and_edit_widgets()
@@ -50,6 +54,33 @@ class Rigid_ui(qtw.QDialog):
         self.copied_colour = (0.2, 0.2, 0.2)
 
         return
+    
+    def enterEvent(self, event):
+        # Restore the window opacity when the mouse enters the window
+        self.setWindowOpacity(1.0)
+        super().enterEvent(event)
+
+    def leaveEvent(self, event):
+        # Make the window transparent when the mouse leaves the window
+        self.setWindowOpacity(0.3)
+        super().leaveEvent(event)
+
+    def mousePressEvent(self, event):
+        # Capture the current mouse position when the mouse is pressed
+        if event.button() == QtCore.Qt.LeftButton:
+            self.old_pos = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        # Update window position when the mouse is moved
+        if self.old_pos is not None:
+            delta = event.globalPos() - self.old_pos
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.old_pos = event.globalPos()
+
+    def mouseReleaseEvent(self, event):
+        # Reset the position when the mouse is released
+        if event.button() == QtCore.Qt.LeftButton:
+            self.old_pos = None
 
     def _refresh(self):
 
@@ -106,8 +137,22 @@ class Rigid_ui(qtw.QDialog):
         self.thicken40_button = self.findChild(qtw.QPushButton, "thicken40_button")
         self.unthicken_button = self.findChild(qtw.QPushButton, "unthicken_button")
 
+        self.sizeup_button = self.findChild(qtw.QPushButton, "sizeup_button")
+        self.sizedown_button = self.findChild(qtw.QPushButton, "sizedown_button")
 
         self.curvedata_label = self.findChild(qtw.QLabel, "cur_data_label")
+
+        self.smartrename_button = self.findChild(qtw.QPushButton, "smart_rename_button")
+        self.prefix_button = self.findChild(qtw.QPushButton, "prefix_button")
+        self.suffix_button = self.findChild(qtw.QPushButton, "suffix_button")
+
+        self.smartrename_lineedit = self.findChild(qtw.QLineEdit, "smartrename_lineedit")
+        self.prefix_lineedit = self.findChild(qtw.QLineEdit, "prefix_lineedit")
+        self.suffix_lineedit = self.findChild(qtw.QLineEdit, "suffix_lineedit")
+
+        self.resize_dial = self.findChild(qtw.QDial, "resize_dial")
+
+        self.exit_button = self.findChild(qtw.QPushButton, "exit_button")
 
         return
 
@@ -148,9 +193,21 @@ class Rigid_ui(qtw.QDialog):
         self.setyellow_button.clicked.connect(lambda:self._set_rgb(globals.rgb_yellow))
 
         self.pastecolour_button.clicked.connect(lambda:self._set_rgb(self.copied_colour))
-
-
         self.copycolour_button.clicked.connect(lambda: self._copy_colour())
+
+        self.sizeup_button.clicked.connect(lambda: self._edit_size(0.25))
+        self.sizedown_button.clicked.connect(lambda: self._edit_size(-0.25))
+
+        self.smartrename_button.clicked.connect(lambda: self._smart_rename())
+        self.prefix_button.clicked.connect(lambda: self._prefix())
+        self.suffix_button.clicked.connect(lambda: self._suffix())
+
+        self.resize_dial.valueChanged.connect(
+            lambda: self._edit_size(self.resize_dial.value() * (9.9 / 100) + 0.01, ab=True))
+        self.resize_dial.sliderReleased.connect(lambda: self._freeze_ctrl())
+
+        self.exit_button.clicked.connect(lambda: self.deleteLater())
+        
 
     def _copy_colour(self):
 
@@ -163,7 +220,68 @@ class Rigid_ui(qtw.QDialog):
         r, g, b = [int(value * 255) for value in colourrgb]
         new_colour = QtGui.QColor(r, g, b)
         self.pastecolour_button.setStyleSheet(f"background-color: rgb({new_colour.red()}, {new_colour.green()}, {new_colour.blue()});")
+
+    def _smart_rename(self):
         
+        if(self.smartrename_lineedit.text() != ""):
+            selection = cmds.ls(sl=True)
+            if(len(selection) == 0):
+                rigid_message("Nothing was selected.")
+                return
+            
+            try:
+                nm.batch_rename(selection, self.smartrename_lineedit.text())
+            except ValueError:
+                rigid_message("Smart Rename field needs ONE cluster of '#'")
+            except NameError:
+                rigid_message("Illegal to start a name with numbers.")
+        else:
+            rigid_message("Smart Rename field is empty.")
+
+    def _prefix(self):
+        if(self.prefix_lineedit.text() != ""):
+            for node in cmds.ls(sl=True):
+                nm.add_prefix(cmds.ls(node, l=False)[0], self.prefix_lineedit.text())
+        else:
+            rigid_message("Prefix field is empty.")
+
+    def _suffix(self):
+        if(self.suffix_lineedit.text() != ""):
+            for node in cmds.ls(sl=True):
+                nm.add_suffix(cmds.ls(node, l=False)[0], self.suffix_lineedit.text())
+        else:
+            rigid_message("Suffix field is empty.")
+
+    @staticmethod
+    def _freeze_ctrl():
+        print("Freezin'")
+        selection = cmds.ls(sl=True)
+        for node in selection:
+            if(cmds.nodeType(nw.get_shape(node)) == 'nurbsCurve'):
+                
+                cmds.makeIdentity(node, apply=True, scale=True, normal=False)
+            else:
+                continue
+
+            
+    @staticmethod
+    def _edit_size(amp: float, ab: bool=False):
+        """Wrapper for expand_curve, recognized the +- as well as the dial differently.
+
+        Args:
+            amp (float): Amplitude of the size change.
+            ab (bool, optional): _description_. Defaults to False.
+        """        
+        print(f"Editing size to {amp}")
+        selection = cmds.ls(sl=True, long=True)
+        trans_list = []
+        for node in selection:
+            if(cmds.nodeType(node) == 'transform'):
+                trans_list.append(node)
+
+        for node in trans_list:
+            ctl.CurveData.expand_curve(node, amp, ab)
+                
 
 
     def _unthicken(self):
@@ -239,6 +357,7 @@ class Rigid_ui(qtw.QDialog):
         """        
         
         if(len(cmds.ls(sl=True)) == 0):
+            rigid_message("Must select a nurbsCurve")
             cmds.inViewMessage(amg='<hl>Must select a nurbsCurve.</hl>', pos='midCenter', fade=True)
 
         try:
@@ -269,7 +388,7 @@ class Rigid_ui(qtw.QDialog):
             cmds.rename(new_null, '{}_null'.format(token))
             cmds.rename(self.ui_ctl_data.curve_node, '{}_ctrl'.format(token))
         else:
-            cmds.inViewMessage(amg="<hl>Must make a selection</hl>")
+            rigid_message("Must make a selection")
 
     def _vis_replace_sel(self):
         """UI wrapper for the curveData.replace() method.
@@ -288,6 +407,8 @@ class Rigid_ui(qtw.QDialog):
             print("Loaded empty data!")
         except ValueError:
             print("Loaded empty data!")
+
+        self.curvedata_label.setText(load_path.split('/')[-1])
 
     def _vis_save_data(self):
         """Opens a filedialog browser, and saves the captured curve data as JSON.
@@ -314,7 +435,10 @@ class Rigid_ui(qtw.QDialog):
         """        
         self.ui_ctl_data.mirror(axis=axis)
         old_text = self.curvedata_label.text()
-        new_text = old_text + ("\nMirrored on {}".format(axis))
+        if(f"Mirrored on {axis}" not in old_text):
+            new_text = old_text + (f"\nMirrored on {axis}")
+        else:
+            new_text = old_text.replace((f"\nMirrored on {axis}"), "")
         self.curvedata_label.setText(new_text)
 
 
@@ -351,3 +475,6 @@ class Rigid_ui(qtw.QDialog):
                 self, title, dir, "Curve Data (*.json)")[0]
         if(fname):
             return fname
+        
+def rigid_message(text: str):
+    cmds.inViewMessage(a=1.0, bkc=0x9879CD, amg=f'Rigid:<hl>{text}<hl>', pos='midCenter', fade=True)

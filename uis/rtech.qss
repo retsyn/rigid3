@@ -4,8 +4,10 @@ QWidget
 {
 	background-color: #313F3C;
 	color: #ffffff;
+    border-radius: 20px;
 
 }
+
 
 /* Style for the QTabWidget as a whole */
 QTabWidget {
@@ -18,8 +20,9 @@ QTabBar::tab {
     background: #9879CD;
 	color: #ffffff;
     font-weight: bold;
-    margin: 2px;
-	padding: 3px;
+    font-size: 10px;
+    margin: 4px;
+	padding: 7px;
 	border-radius:5px;
 }
 
@@ -118,6 +121,16 @@ QPushButton::disabled
 QPushButton::pressed
 {
 	background-color: #239f35;
+
+}
+
+QLineEdit
+{
+    color: #313F3C;
+    font-weight: bold;
+    background-color: #E5E18C;
+    border-radius: 3px;
+    padding: 4px;
 
 }
 
@@ -220,17 +233,6 @@ QCheckBox::indicator:disabled
 }
 
 
-/*-----QLineEdit-----*/
-QLineEdit
-{
-	background-color: #c2c7d5;
-	color: #000;
-	font-weight: bold;
-	border: none;
-	border-radius: 2px;
-	padding: 3px;
-
-}
 
 
 /*-----QListView-----*/

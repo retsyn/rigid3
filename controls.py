@@ -2,19 +2,26 @@
 controls.py
 Created: Saturday, 17th September 2022 11:20:53 am
 Matthew Riche
-Last Modified: Sunday, 18th September 2022 2:55:30 pm
+Last Modified: Wednesday, 2nd October 2024 8:45:15 pm
 Modified By: Matthew Riche
 '''
 
 import maya.cmds as cmds
 import os
+import re
+
+from . import nodework as nw
+
 
 
 class CurveData:
-    def __init__(self, node=None, sel=False):
-        """Data that represents the shape of a nurbsCurve, and methods to capture and rebuild it 
-        where needed.
-        """        
+    def __init__(self, node: str=None, sel: bool=False):
+        """Data representing a curve for a rig, and self modification features.
+
+        Args:
+            node (str, optional): Name of extant curve shape node. Defaults to None.
+            sel (bool, optional): If selected node will be processed. Defaults to False.
+        """            
 
         self.pos_vectors = []
         self.degree = None
@@ -28,7 +35,7 @@ class CurveData:
             self.capture_curve(node=node, sel=sel)
 
 
-    def capture_curve(self, node=None, sel=False):
+    def capture_curve(self, node: str=None, sel:bool=False):
         """Captures and reads the data of a curve.
 
         Args:
@@ -36,7 +43,7 @@ class CurveData:
             sel (bool, optional): Whether or not to use selection. Defaults to False.
 
         Raises:
-            Exception: _description_
+            Exception: If neither node more or selection mode are true.
         """        
         if(node is not None):
             if(cmds.objectType(node) == 'nurbsCurve'):
@@ -56,7 +63,7 @@ class CurveData:
 
 
     @staticmethod
-    def get_curve_shape(nodename=None):
+    def get_curve_shape(nodename: str=None):
         """Given the name of a transform node, return the names of the shape nodes.
 
         Args:
@@ -111,7 +118,6 @@ class CurveData:
             raise TypeError ("Type in scene of {} is not 'nurbsCurve'.".format(curve_shape_node))
         # Read and store the point data from a curve:
         cv_indices = cmds.getAttr(curve_shape_node + '.controlPoints', mi=True)
-        print(curve_shape_node)
         pos_vectors = []
         for i in cv_indices:
             # By casting this to a list, we give ourselves the ability to assign items later, which
@@ -132,7 +138,7 @@ class CurveData:
         self.form = form
         # Scene cleanup of temporary utility nodes.
         cmds.delete(curve_info_node)
-        print("Read nurbsCurve attributes for {}".format(curve_shape_node))
+        print(f"Read nurbsCurve attributes for {curve_shape_node}")
 
     def build(self):
         """Build the curve in the scene based on the captured data.
@@ -157,7 +163,7 @@ class CurveData:
         if(self.form > 0):
             cmds.closeCurve(self.curve_shape, ch=False, rpo=True)
 
-    def mirror(self, axis='x'):
+    def mirror(self, axis: str='x'):
         """Mirror the control vertices' position along a given axis.
 
         Args:
@@ -167,18 +173,16 @@ class CurveData:
         Raises:
             Exception: If a bad char is supplied to axis.
         """        
-        print("AXIS IS {}".format(axis))
         axis_names = ('x', 'y', 'z')
         if(axis not in axis_names):
             raise Exception ("Axis must be 'x', 'y', or 'z'.")
         # Turn the given axis from 'x','y','z' to [0, 1, 2] for use in the next part.
         ind = axis_names.index(axis)
-        print("INDEX IS {}".format(ind))
         # Negate the value of the position vector (based on axis)
         for i in range(len(self.pos_vectors)):
             self.pos_vectors[i][ind] = (-self.pos_vectors[i][ind])
 
-    def replace(self, node=None):
+    def replace(self, node: str=None):
         """Builds this curve and makes it the child selected or specified controller.  Deletes the 
         former shape node.
 
@@ -201,8 +205,10 @@ class CurveData:
         cmds.delete(self.curve_node)
         cmds.delete(old_shape)
 
+        fix_shape_name(node)
+
     @staticmethod
-    def copy(mirror=False):
+    def copy(mirror: bool=False):
         """Copies from first selection to second selection and installs the curves beneath.
 
         Args:
@@ -218,12 +224,20 @@ class CurveData:
         data = CurveData()
         shape_to_copy = data.get_curve_shape(selections[0])[0]
         data.learn_curve(shape_to_copy)
-        print(data)
         if(mirror):
             data.mirror()
         data.replace(node=selections[1])
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
+        """Turn the data defining the curve as a dictionary.
+
+        Raises:
+            TypeError: Curvedata doesn't contain anything (is NoneType).
+            ValueError: Curve has zero points.
+
+        Returns:
+            _type_: _description_
+        """        
 
         for data_point in [self.degree, self.knots, self.form]:
             if(data_point is None):
@@ -284,16 +298,70 @@ class CurveData:
     def __len__(self):
         return len(self.pos_vectors)
     
+    @staticmethod
+    def colour_shapenode(rgb: tuple, target: str):
+        # verify the rgb value is sane:
+        if(len(rgb) != 3):
+            raise IndexError("rgb was provided wrong number of values.")
+        for vector in rgb:
+            if(type(vector) not in ['float', 'int', 'double']):
+                raise ValueError(f"Value given in rgb \"{vector}\" is not a number.")
+            
+    @staticmethod
+    def expand_curve(node: str, amp: float, absolute=False):
+        if(cmds.nodeType(node) != 'transform'):
+            raise ValueError (f"{node} isn't a transform node.")
+        if(cmds.nodeType(nw.get_shape(node)) != 'nurbsCurve'):
+            raise ValueError (f"{node}'s shape node isn't a nurbsCurve.")
+        
+        if(absolute == False):
+            cmds.setAttr(f"{node}.scaleX", (cmds.getAttr(f"{node}.scaleX")) + amp)
+            cmds.setAttr(f"{node}.scaleY", (cmds.getAttr(f"{node}.scaleY")) + amp)
+            cmds.setAttr(f"{node}.scaleZ", (cmds.getAttr(f"{node}.scaleZ")) + amp)
+            cmds.makeIdentity(
+                node, apply=True, translate=True, rotate=True, scale=True, normal=False
+                )
+        else:
+            cmds.setAttr(f"{node}.scaleX", amp)
+            cmds.setAttr(f"{node}.scaleY", amp)
+            cmds.setAttr(f"{node}.scaleZ", amp)
 
-def colour_shapenode(rgb: tuple, target: str):
-    # verify the rgb value is sane:
-    if(len(rgb) != 3):
-        raise IndexError("rgb was provided wrong number of values.")
-    for vector in rgb:
-        if(type(vector) not in ['float', 'int', 'double']):
-            raise ValueError("Value given in rgb \"{vector}\" is not a number.")
+        
 
-    # Todo: add rgb    
+
+
+
+def fix_shape_name(node: str):
+    """Fixes a shape-node's name if it's mismatched from it's transform.
+
+    Args:
+        node (str): The name of the node to fix.
+
+    Raises:
+        TypeError: If the node provided isn't a transform.
+    """    
+    print("Fixin'!")
+    if(cmds.nodeType(node) != 'transform'):
+        raise TypeError (f"{node} can't fix shape name of a non-transform.")
+    
+    shape = nw.get_shape(node)
+    print(f"grabbed shape {shape}")
+    if(cmds.ls(shape, l=False) != cmds.ls(node, l=False)):
+
+        # Check if the shape name ends with a number:
+        match = re.search(r'\d+$', node)
+        end_number = int(match.group()) if match else None
+
+        if(end_number is not None):
+            shape_token = re.sub(r'\d+$', '', node)
+            new_name = shape_token + 'Shape' + str(end_number)
+        else:
+            new_name = node + 'Shape'
+
+        cmds.rename(shape, new_name)
+
+
+    
     
         
     
