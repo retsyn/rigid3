@@ -115,6 +115,26 @@ class RibbonJoints(BuildIdiom):
         # New joints are added to created list, and anything that has a new child is affected.
         self.post_build(created=created_joints, affected=affected_nodes)
 
+
+class SimpleTransformer(BuildIdiom):
+    def __init__(self):
+        super().__init__()
+        self.build()
+
+    def build(self):
+        super().build()
+
+        selected_joint = cmds.ls(sl=True)[0]
+        ctrl_name = selected_joint.rpartition('_')[0]
+        nurbs_name = cmds.circle(nr=(0, 0, 1), c=(0, 0, 0), n=ctrl_name + '_ctrl')[0]
+        cmds.delete(nurbs_name, ch=True)
+        new_group = cmds.group(nurbs_name, n=ctrl_name + '_null')
+        cmds.matchTransform(new_group, selected_joint, piv=True, pos=True, rot=True)
+        new_constraint = cmds.parentConstraint(nurbs_name, selected_joint, mo=False)
+
+        self.post_build(created = [nurbs_name, new_group], affected=selected_joint)
+
+
 class SimpleFK(BuildIdiom):
     def __init__(self, trans=False):
         """Build a simple FK, rotation only unless otherwise specified, using a null trans and 
@@ -143,6 +163,7 @@ class SimpleFK(BuildIdiom):
         cmds.connectAttr(nurbs_name + '.r', selected_joint + '.r')
         print("Connected {} rotate to {} rotate.".format(nurbs_name, selected_joint))
         if(cons_trans):
+            print("This is dumb don't use it.")
             cmds.connectAttr(nurbs_name + '.t', selected_joint + '.t')
             print("Connected {} translate to {} translate.".format(nurbs_name, selected_joint))
 

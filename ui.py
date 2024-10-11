@@ -19,6 +19,7 @@ from . import controls as ctl
 from . import build as bld
 from . import nodework as nw
 from . import naming as nm
+from . import skin as sk
 
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
@@ -119,7 +120,11 @@ class Rigid_ui(qtw.QDialog):
         self.vis_mirrory_button = self.findChild(qtw.QPushButton, "mirror_y_button")
         self.vis_mirrorz_button = self.findChild(qtw.QPushButton, "mirror_z_button")
         self.bld_fastfk_button = self.findChild(qtw.QPushButton, "fast_fk_button")
+        self.bld_simp_trans = self.findChild(qtw.QPushButton, "simpleTranslator_button")
         self.bld_ribbon_joints_button = self.findChild(qtw.QPushButton, "ribbon_joints_button")
+
+        self.skn_copy_sock_button = self.findChild(qtw.QPushButton, "copysock_button")
+        self.skn_selectcluster_button = self.findChild(qtw.QPushButton, "selectcluster_button")
 
         self.setblue_button = self.findChild(qtw.QPushButton, "blue_pushbutton")
         self.setgreen_button = self.findChild(qtw.QPushButton, "green_pushbutton")
@@ -192,6 +197,11 @@ class Rigid_ui(qtw.QDialog):
         self.setpaleyellow_button.clicked.connect(lambda:self._set_rgb(globals.rgb_paleyellow))
         self.setyellow_button.clicked.connect(lambda:self._set_rgb(globals.rgb_yellow))
 
+        self.skn_copy_sock_button.clicked.connect(lambda:self._copy_sock())
+        self.skn_selectcluster_button.clicked.connect(lambda:self._select_cluster())
+
+        self.bld_simp_trans.clicked.connect(lambda:self._exec_simp_trans())
+
         self.pastecolour_button.clicked.connect(lambda:self._set_rgb(self.copied_colour))
         self.copycolour_button.clicked.connect(lambda: self._copy_colour())
 
@@ -207,8 +217,27 @@ class Rigid_ui(qtw.QDialog):
         self.resize_dial.sliderReleased.connect(lambda: self._freeze_ctrl())
 
         self.exit_button.clicked.connect(lambda: self.deleteLater())
-        
 
+    @staticmethod
+    def _copy_sock():
+        selection = cmds.ls(sl=True)
+        if(sk.find_skin_cluster(selection[0]) is None):
+            rigid_message(f"{selection[0]} doesn't have a skinCluster.")
+            return
+        sk.copy_skinweights(selection[0], selection[1:])
+
+    @staticmethod
+    def _select_cluster():
+        selection = cmds.ls(sl=True)[0]
+        if(selection is not None):
+            cluster = sk.find_skin_cluster(selection)
+            if(cluster is not None):
+                cmds.select(sk.find_skin_cluster(selection), r=True)
+            else:
+                rigid_message(f"No skinCluster found on {selection}")
+        else:
+            rigid_message(f"Select a mesh to search for a skinCluster. {selection}")
+    
     def _copy_colour(self):
 
         selection = cmds.ls(sl=True)[0]
@@ -251,6 +280,15 @@ class Rigid_ui(qtw.QDialog):
                 nm.add_suffix(cmds.ls(node, l=False)[0], self.suffix_lineedit.text())
         else:
             rigid_message("Suffix field is empty.")
+
+    @staticmethod
+    def _exec_simp_trans():
+        print("Building simple trans")
+        selection = cmds.ls(sl=True)[0]
+        if(cmds.nodeType(selection) != "joint"):
+            rigid_message("Must select a joint for a simple trans to work.")
+        else:
+            bld.SimpleTransformer()
 
     @staticmethod
     def _freeze_ctrl():

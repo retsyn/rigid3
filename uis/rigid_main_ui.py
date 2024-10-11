@@ -35,20 +35,10 @@ class Ui_Form(object):
         self.visuals_tab.setObjectName(u"visuals_tab")
         self.verticalLayoutWidget = QWidget(self.visuals_tab)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 211, 201))
+        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 221, 220))
         self.gridLayout_3 = QGridLayout(self.verticalLayoutWidget)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.load_data_button = QPushButton(self.verticalLayoutWidget)
-        self.load_data_button.setObjectName(u"load_data_button")
-
-        self.gridLayout_3.addWidget(self.load_data_button, 0, 0, 1, 1)
-
-        self.save_data_button = QPushButton(self.verticalLayoutWidget)
-        self.save_data_button.setObjectName(u"save_data_button")
-
-        self.gridLayout_3.addWidget(self.save_data_button, 1, 0, 1, 1)
-
         self.copy_data_button = QPushButton(self.verticalLayoutWidget)
         self.copy_data_button.setObjectName(u"copy_data_button")
 
@@ -58,16 +48,6 @@ class Ui_Form(object):
         self.replace_sel_button.setObjectName(u"replace_sel_button")
 
         self.gridLayout_3.addWidget(self.replace_sel_button, 3, 0, 1, 1)
-
-        self.build_button = QPushButton(self.verticalLayoutWidget)
-        self.build_button.setObjectName(u"build_button")
-
-        self.gridLayout_3.addWidget(self.build_button, 4, 0, 1, 1)
-
-        self.build_match_button = QPushButton(self.verticalLayoutWidget)
-        self.build_match_button.setObjectName(u"build_match_button")
-
-        self.gridLayout_3.addWidget(self.build_match_button, 5, 0, 1, 1)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -97,6 +77,26 @@ class Ui_Form(object):
 
         self.gridLayout_3.addLayout(self.horizontalLayout, 6, 0, 1, 1)
 
+        self.save_data_button = QPushButton(self.verticalLayoutWidget)
+        self.save_data_button.setObjectName(u"save_data_button")
+
+        self.gridLayout_3.addWidget(self.save_data_button, 1, 0, 1, 1)
+
+        self.load_data_button = QPushButton(self.verticalLayoutWidget)
+        self.load_data_button.setObjectName(u"load_data_button")
+
+        self.gridLayout_3.addWidget(self.load_data_button, 0, 0, 1, 1)
+
+        self.build_button = QPushButton(self.verticalLayoutWidget)
+        self.build_button.setObjectName(u"build_button")
+
+        self.gridLayout_3.addWidget(self.build_button, 4, 0, 1, 1)
+
+        self.build_match_button = QPushButton(self.verticalLayoutWidget)
+        self.build_match_button.setObjectName(u"build_match_button")
+
+        self.gridLayout_3.addWidget(self.build_match_button, 5, 0, 1, 1)
+
         self.frame = QFrame(self.visuals_tab)
         self.frame.setObjectName(u"frame")
         self.frame.setGeometry(QRect(240, 10, 121, 111))
@@ -114,7 +114,7 @@ class Ui_Form(object):
         self.label_3.setGeometry(QRect(260, 130, 81, 20))
         self.verticalLayoutWidget_2 = QWidget(self.visuals_tab)
         self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(10, 220, 341, 145))
+        self.verticalLayoutWidget_2.setGeometry(QRect(10, 244, 341, 121))
         self.colourLayout = QVBoxLayout(self.verticalLayoutWidget_2)
         self.colourLayout.setSpacing(3)
         self.colourLayout.setObjectName(u"colourLayout")
@@ -230,11 +230,42 @@ class Ui_Form(object):
         self.sizedown_button.setGeometry(QRect(310, 180, 21, 21))
         self.sizedown_button.setStyleSheet(u"background-color: #F08969; color: black; font-size: 14x;")
         self.tabWidget.addTab(self.visuals_tab, "")
+        self.skinTab = QWidget()
+        self.skinTab.setObjectName(u"skinTab")
+        self.gridLayoutWidget = QWidget(self.skinTab)
+        self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
+        self.gridLayoutWidget.setGeometry(QRect(9, 9, 351, 151))
+        self.gridLayout = QGridLayout(self.gridLayoutWidget)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.copysock_button = QPushButton(self.gridLayoutWidget)
+        self.copysock_button.setObjectName(u"copysock_button")
+
+        self.gridLayout.addWidget(self.copysock_button, 0, 0, 1, 1)
+
+        self.selectcluster_button = QPushButton(self.gridLayoutWidget)
+        self.selectcluster_button.setObjectName(u"selectcluster_button")
+
+        self.gridLayout.addWidget(self.selectcluster_button, 1, 0, 1, 1)
+
+        self.harden_button = QPushButton(self.gridLayoutWidget)
+        self.harden_button.setObjectName(u"harden_button")
+        self.harden_button.setEnabled(False)
+
+        self.gridLayout.addWidget(self.harden_button, 2, 0, 1, 1)
+
+        self.detect_badbind_button = QPushButton(self.gridLayoutWidget)
+        self.detect_badbind_button.setObjectName(u"detect_badbind_button")
+        self.detect_badbind_button.setEnabled(False)
+
+        self.gridLayout.addWidget(self.detect_badbind_button, 3, 0, 1, 1)
+
+        self.tabWidget.addTab(self.skinTab, "")
         self.build_tab = QWidget()
         self.build_tab.setObjectName(u"build_tab")
         self.verticalLayoutWidget_3 = QWidget(self.build_tab)
         self.verticalLayoutWidget_3.setObjectName(u"verticalLayoutWidget_3")
-        self.verticalLayoutWidget_3.setGeometry(QRect(9, 12, 351, 111))
+        self.verticalLayoutWidget_3.setGeometry(QRect(9, 12, 351, 112))
         self.verticalLayout_3 = QVBoxLayout(self.verticalLayoutWidget_3)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -248,6 +279,11 @@ class Ui_Form(object):
         self.fast_fk_button_2.setEnabled(False)
 
         self.verticalLayout_3.addWidget(self.fast_fk_button_2)
+
+        self.simpleTranslator_button = QPushButton(self.verticalLayoutWidget_3)
+        self.simpleTranslator_button.setObjectName(u"simpleTranslator_button")
+
+        self.verticalLayout_3.addWidget(self.simpleTranslator_button)
 
         self.ribbon_joints_button = QPushButton(self.verticalLayoutWidget_3)
         self.ribbon_joints_button.setObjectName(u"ribbon_joints_button")
@@ -324,16 +360,16 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.load_data_button.setText(QCoreApplication.translate("Form", u"Load CurveData from JSON", None))
-        self.save_data_button.setText(QCoreApplication.translate("Form", u"Save CurveData to JSON", None))
         self.copy_data_button.setText(QCoreApplication.translate("Form", u"Copy From Selected", None))
         self.replace_sel_button.setText(QCoreApplication.translate("Form", u"Replace Selected", None))
-        self.build_button.setText(QCoreApplication.translate("Form", u"Make New at Origin", None))
-        self.build_match_button.setText(QCoreApplication.translate("Form", u"Make Matching Selected", None))
         self.mirror_x_button.setText(QCoreApplication.translate("Form", u"Mirror X", None))
         self.mirror_y_button.setText(QCoreApplication.translate("Form", u"Mirror Y", None))
         self.mirror_z_button.setText(QCoreApplication.translate("Form", u"Mirror Z", None))
         self.pushButton.setText(QCoreApplication.translate("Form", u"Invert", None))
+        self.save_data_button.setText(QCoreApplication.translate("Form", u"Save CurveData to JSON", None))
+        self.load_data_button.setText(QCoreApplication.translate("Form", u"Load CurveData from JSON", None))
+        self.build_button.setText(QCoreApplication.translate("Form", u"Make New at Origin", None))
+        self.build_match_button.setText(QCoreApplication.translate("Form", u"Make Matching Selected", None))
         self.label_2.setText(QCoreApplication.translate("Form", u"Current Data:", None))
         self.cur_data_label.setText(QCoreApplication.translate("Form", u"Unknown", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"Control Scale:", None))
@@ -354,8 +390,14 @@ class Ui_Form(object):
         self.sizeup_button.setText(QCoreApplication.translate("Form", u"+", None))
         self.sizedown_button.setText(QCoreApplication.translate("Form", u"-", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.visuals_tab), QCoreApplication.translate("Form", u"CONTROLS", None))
+        self.copysock_button.setText(QCoreApplication.translate("Form", u"Copy Weight From Sock", None))
+        self.selectcluster_button.setText(QCoreApplication.translate("Form", u"Select SkinCluster", None))
+        self.harden_button.setText(QCoreApplication.translate("Form", u"Harden Matching Vertex", None))
+        self.detect_badbind_button.setText(QCoreApplication.translate("Form", u"Detect Bad Bindposes", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.skinTab), QCoreApplication.translate("Form", u"SKIN", None))
         self.fast_fk_button.setText(QCoreApplication.translate("Form", u"Fast FK", None))
         self.fast_fk_button_2.setText(QCoreApplication.translate("Form", u"Fast IK", None))
+        self.simpleTranslator_button.setText(QCoreApplication.translate("Form", u"Simple 1:1 Translator", None))
         self.ribbon_joints_button.setText(QCoreApplication.translate("Form", u"Ribbon Joints", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.build_tab), QCoreApplication.translate("Form", u"BUILD", None))
         self.prefix_button.setText(QCoreApplication.translate("Form", u"Prefix", None))

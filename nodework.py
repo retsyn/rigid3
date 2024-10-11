@@ -10,7 +10,7 @@ Modified By: Matthew Riche
 
 import maya.cmds as cmds
 
-def get_shape(node):
+def get_shape(node) -> str:
     """Grab the shape node of a transform or similar.
 
     Args:
@@ -26,9 +26,9 @@ def get_shape(node):
 
     # Verify this node exists in the scene:
     if(cmds.ls(node) == []):
-        raise ValueError ("No node called {} exists in the scene.".format(node))
+        raise ValueError (f"No node called {node} exists in the scene.")
 
-    shape = cmds.listRelatives(node, shapes=True)
+    shape = cmds.listRelatives(node, shapes=True)[0]
     if shape:
         return shape
     else:
