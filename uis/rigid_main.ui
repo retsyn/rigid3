@@ -221,7 +221,7 @@
        <x>10</x>
        <y>244</y>
        <width>341</width>
-       <height>121</height>
+       <height>145</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="colourLayout">
@@ -635,6 +635,19 @@
    </property>
    <property name="text">
     <string>X</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="version_label">
+   <property name="geometry">
+    <rect>
+     <x>16</x>
+     <y>10</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Rigid 3.x</string>
    </property>
   </widget>
  </widget>

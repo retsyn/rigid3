@@ -114,7 +114,7 @@ class Ui_Form(object):
         self.label_3.setGeometry(QRect(260, 130, 81, 20))
         self.verticalLayoutWidget_2 = QWidget(self.visuals_tab)
         self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(10, 244, 341, 121))
+        self.verticalLayoutWidget_2.setGeometry(QRect(10, 244, 341, 145))
         self.colourLayout = QVBoxLayout(self.verticalLayoutWidget_2)
         self.colourLayout.setSpacing(3)
         self.colourLayout.setObjectName(u"colourLayout")
@@ -349,6 +349,9 @@ class Ui_Form(object):
         self.exit_button = QPushButton(Form)
         self.exit_button.setObjectName(u"exit_button")
         self.exit_button.setGeometry(QRect(370, 10, 16, 16))
+        self.version_label = QLabel(Form)
+        self.version_label.setObjectName(u"version_label")
+        self.version_label.setGeometry(QRect(16, 10, 91, 20))
 
         self.retranslateUi(Form)
 
@@ -411,5 +414,6 @@ class Ui_Form(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.naming_tab), QCoreApplication.translate("Form", u"RENAME", None))
         self.label.setText(QCoreApplication.translate("Form", u"Matt Riche 2024  (MIT lic.)", None))
         self.exit_button.setText(QCoreApplication.translate("Form", u"X", None))
+        self.version_label.setText(QCoreApplication.translate("Form", u"Rigid 3.x", None))
     # retranslateUi
 

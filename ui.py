@@ -63,7 +63,7 @@ class Rigid_ui(qtw.QDialog):
 
     def leaveEvent(self, event):
         # Make the window transparent when the mouse leaves the window
-        self.setWindowOpacity(0.3)
+        self.setWindowOpacity(0.5)
         super().leaveEvent(event)
 
     def mousePressEvent(self, event):
@@ -109,6 +109,9 @@ class Rigid_ui(qtw.QDialog):
         loader = QtUiTools.QUiLoader()
         self.ui = loader.load(ui_file, parentWidget=self)
         self.setStyleSheet(str(qss_content, encoding='utf-8'))
+
+        self.version_label = self.findChild(qtw.QLabel, "version_label")
+        self.version_label.setText(f"Version {globals.RIGID_VERSION}")
 
         self.vis_copydata_button = self.findChild(qtw.QPushButton, "copy_data_button")
         self.vis_buildorigin_button = self.findChild(qtw.QPushButton, "build_button")
