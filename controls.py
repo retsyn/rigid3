@@ -144,13 +144,13 @@ class CurveData:
         """Build the curve in the scene based on the captured data.
 
         Raises:
-            Exception: If any piece of data is missing, it'll crash.
+            ValueError: If any piece of data is missing.
         """        
-
+        
         # Make sure we have content to build:
         for data in [self.form, self.pos_vectors, self.knots, self.degree]:
             if(data is None):
-                raise Exception ("Cannot build curve with lacking curve data")
+                raise ValueError("Cannot build curve with lacking curve data")
         # Create the curve node based on it.
         print(self)
         self.curve_node = cmds.curve(

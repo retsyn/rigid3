@@ -111,7 +111,7 @@ class Rigid_ui(qtw.QDialog):
         self.setStyleSheet(str(qss_content, encoding='utf-8'))
 
         self.version_label = self.findChild(qtw.QLabel, "version_label")
-        self.version_label.setText(f"Version {globals.RIGID_VERSION}")
+        self.version_label.setText(f"RigId v{globals.RIGID_VERSION}")
 
         self.vis_copydata_button = self.findChild(qtw.QPushButton, "copy_data_button")
         self.vis_buildorigin_button = self.findChild(qtw.QPushButton, "build_button")
@@ -175,7 +175,7 @@ class Rigid_ui(qtw.QDialog):
 
         self.vis_copydata_button.clicked.connect(self._vis_copy_data)
         self.vis_buildorigin_button.clicked.connect(self._vis_build_origin)
-        self.vis_make_at_match_button.clicked.connect(self._vis_build_match)
+        
         self.vis_replace_button.clicked.connect(self._vis_replace_sel)
         self.vis_load_curvedata.clicked.connect(self._vis_load_data)
         self.vis_save_curvedata.clicked.connect(self._vis_save_data)
@@ -185,6 +185,7 @@ class Rigid_ui(qtw.QDialog):
         self.vis_mirrorx_button.clicked.connect(lambda: self._vis_mirror_ctrl(axis='x'))
         self.vis_mirrory_button.clicked.connect(lambda: self._vis_mirror_ctrl(axis='y'))
         self.vis_mirrorz_button.clicked.connect(lambda: self._vis_mirror_ctrl(axis='z'))
+        self.vis_make_at_match_button.clicked.connect(lambda: self._vis_build_match())
 
         self.thicken25_button.clicked.connect(lambda: self._thicken25())
         self.thicken40_button.clicked.connect(lambda: self._thicken40())
@@ -240,7 +241,7 @@ class Rigid_ui(qtw.QDialog):
                 rigid_message(f"No skinCluster found on {selection}")
         else:
             rigid_message(f"Select a mesh to search for a skinCluster. {selection}")
-    
+                
     def _copy_colour(self):
 
         selection = cmds.ls(sl=True)[0]
@@ -330,7 +331,7 @@ class Rigid_ui(qtw.QDialog):
         selection = cmds.ls(sl=True)
         for node in selection:
             try:
-                shape = nw.get_shape(node)[0]
+                shape = nw.get_shape(node)
             except TypeError:
                 shape = node
             
@@ -342,7 +343,7 @@ class Rigid_ui(qtw.QDialog):
         selection = cmds.ls(sl=True)
         for node in selection:
             try:
-                shape = nw.get_shape(node)[0]
+                shape = nw.get_shape(node)
             except TypeError:
                 shape = node
             
@@ -355,7 +356,7 @@ class Rigid_ui(qtw.QDialog):
         selection = cmds.ls(sl=True)
         for node in selection:
             try:
-                shape = nw.get_shape(node)[0]
+                shape = nw.get_shape(node)
             except TypeError:
                 shape = node
             
@@ -368,9 +369,10 @@ class Rigid_ui(qtw.QDialog):
         selections = cmds.ls(sl=True)
         for node in selections:
             try:
-                shape = nw.get_shape(node)[0]
+                shape = nw.get_shape(node)
             except TypeError:
                 shape = node
+            print(f"shape is {shape}")
             cmds.setAttr(f"{shape}.overrideEnabled", 1)
             cmds.setAttr(f"{shape}.overrideRGBColors", 1)
             
@@ -419,10 +421,12 @@ class Rigid_ui(qtw.QDialog):
         sel = cmds.ls(sl=True)
         if(sel):
             if(cmds.objectType(sel[0]) not in ['transform', 'joint']):
-                cmds.inViewMessage(amg="<hl>Can't match to a non-transform!</hl>", pos='midCenter',
-                    fade=True)
+                rigid_message("Can't match to a non-transform!</hl>")
                 return
-            self.ui_ctl_data.build()
+            try:
+                self.ui_ctl_data.build()
+            except ValueError:
+                rigid_message("Load Curve Data first.")
             new_null = cmds.group(self.ui_ctl_data.curve_node)
             token = sel[0].rpartition('_')[0]
             cmds.matchTransform(new_null, sel[0])

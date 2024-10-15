@@ -30,6 +30,7 @@ def get_shape(node) -> str:
 
     shape = cmds.listRelatives(node, shapes=True)[0]
     if shape:
+        print(f"shape is {shape}")
         return shape
     else:
         raise TypeError ("This node doesn't have it's own shape.")

@@ -35,19 +35,14 @@ class Ui_Form(object):
         self.visuals_tab.setObjectName(u"visuals_tab")
         self.verticalLayoutWidget = QWidget(self.visuals_tab)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 221, 220))
+        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 221, 230))
         self.gridLayout_3 = QGridLayout(self.verticalLayoutWidget)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.copy_data_button = QPushButton(self.verticalLayoutWidget)
-        self.copy_data_button.setObjectName(u"copy_data_button")
+        self.save_data_button = QPushButton(self.verticalLayoutWidget)
+        self.save_data_button.setObjectName(u"save_data_button")
 
-        self.gridLayout_3.addWidget(self.copy_data_button, 2, 0, 1, 1)
-
-        self.replace_sel_button = QPushButton(self.verticalLayoutWidget)
-        self.replace_sel_button.setObjectName(u"replace_sel_button")
-
-        self.gridLayout_3.addWidget(self.replace_sel_button, 3, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.save_data_button, 1, 0, 1, 1)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -77,25 +72,30 @@ class Ui_Form(object):
 
         self.gridLayout_3.addLayout(self.horizontalLayout, 6, 0, 1, 1)
 
-        self.save_data_button = QPushButton(self.verticalLayoutWidget)
-        self.save_data_button.setObjectName(u"save_data_button")
-
-        self.gridLayout_3.addWidget(self.save_data_button, 1, 0, 1, 1)
-
-        self.load_data_button = QPushButton(self.verticalLayoutWidget)
-        self.load_data_button.setObjectName(u"load_data_button")
-
-        self.gridLayout_3.addWidget(self.load_data_button, 0, 0, 1, 1)
-
         self.build_button = QPushButton(self.verticalLayoutWidget)
         self.build_button.setObjectName(u"build_button")
 
         self.gridLayout_3.addWidget(self.build_button, 4, 0, 1, 1)
 
+        self.copy_data_button = QPushButton(self.verticalLayoutWidget)
+        self.copy_data_button.setObjectName(u"copy_data_button")
+
+        self.gridLayout_3.addWidget(self.copy_data_button, 2, 0, 1, 1)
+
         self.build_match_button = QPushButton(self.verticalLayoutWidget)
         self.build_match_button.setObjectName(u"build_match_button")
 
         self.gridLayout_3.addWidget(self.build_match_button, 5, 0, 1, 1)
+
+        self.replace_sel_button = QPushButton(self.verticalLayoutWidget)
+        self.replace_sel_button.setObjectName(u"replace_sel_button")
+
+        self.gridLayout_3.addWidget(self.replace_sel_button, 3, 0, 1, 1)
+
+        self.load_data_button = QPushButton(self.verticalLayoutWidget)
+        self.load_data_button.setObjectName(u"load_data_button")
+
+        self.gridLayout_3.addWidget(self.load_data_button, 0, 0, 1, 1)
 
         self.frame = QFrame(self.visuals_tab)
         self.frame.setObjectName(u"frame")
@@ -363,16 +363,16 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.copy_data_button.setText(QCoreApplication.translate("Form", u"Copy From Selected", None))
-        self.replace_sel_button.setText(QCoreApplication.translate("Form", u"Replace Selected", None))
+        self.save_data_button.setText(QCoreApplication.translate("Form", u"Save CurveData to JSON", None))
         self.mirror_x_button.setText(QCoreApplication.translate("Form", u"Mirror X", None))
         self.mirror_y_button.setText(QCoreApplication.translate("Form", u"Mirror Y", None))
         self.mirror_z_button.setText(QCoreApplication.translate("Form", u"Mirror Z", None))
         self.pushButton.setText(QCoreApplication.translate("Form", u"Invert", None))
-        self.save_data_button.setText(QCoreApplication.translate("Form", u"Save CurveData to JSON", None))
-        self.load_data_button.setText(QCoreApplication.translate("Form", u"Load CurveData from JSON", None))
         self.build_button.setText(QCoreApplication.translate("Form", u"Make New at Origin", None))
+        self.copy_data_button.setText(QCoreApplication.translate("Form", u"Copy From Selected", None))
         self.build_match_button.setText(QCoreApplication.translate("Form", u"Make Matching Selected", None))
+        self.replace_sel_button.setText(QCoreApplication.translate("Form", u"Replace Selected", None))
+        self.load_data_button.setText(QCoreApplication.translate("Form", u"Load CurveData from JSON", None))
         self.label_2.setText(QCoreApplication.translate("Form", u"Current Data:", None))
         self.cur_data_label.setText(QCoreApplication.translate("Form", u"Unknown", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"Control Scale:", None))
