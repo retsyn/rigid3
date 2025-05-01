@@ -10,8 +10,12 @@ import maya.OpenMayaUI as omui
 import maya.cmds as cmds
 import sys
 import os
-from PySide2 import QtCore, QtWidgets as qtw, QtGui, QtUiTools
-from shiboken2 import wrapInstance
+try:
+    from PySide2 import QtCore, QtWidgets as qtw, QtGui, QtUiTools
+    from shiboken2 import wrapInstance
+except ImportError:
+    from PySide6 import QtCore, QtWidgets as qtw, QtGui, QtUiTools
+    from shiboken6 import wrapInstance
 
 from . import globals
 from . import file_ops as fo
