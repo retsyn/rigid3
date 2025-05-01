@@ -7,7 +7,7 @@ Modified By: Matthew Riche
 '''
 
 
-RIGID_VERSION = ("3.0.4")
+RIGID_VERSION = ("3.0.42")
 
 rgb_blue = (0.0, 0.2, 0.8)
 rgb_paleblue = (0.43, 0.77, 0.82)
